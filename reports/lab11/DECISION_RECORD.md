@@ -81,3 +81,14 @@ al ranking.
 3. Las métricas interseccionales se reportan con n e incertidumbre (R09).
 4. Hay mecanismo de apelación operativo y operadores capacitados (R06, R08).
 5. El Product Owner firma este registro.
+
+## Adenda tras LAB12 (2026-10-08)
+
+- **R01 corregido con evidencia:** la hipótesis original (recall menor en G2) era falsa. LAB12 muestra
+  recall G1 0.653 frente a G2 0.791, y FPR G1 0.250 frente a G2 0.375 (logistic). El escenario y los
+  afectados de R01 se actualizaron en `risk_register.csv`. Es un ejemplo de por qué el registro debe
+  revisarse con datos y no quedarse en suposiciones.
+- **MEASURE:** completado en `reports/lab12/AUDIT_REPORT.md`. La logística cumple los gates en la
+  estimación puntual, pero los IC95 de las brechas superan 0.16.
+- **Decisión actualizada:** de REVIEW a **LIMITAR**, es decir, piloto en modo sombra con revisión
+  humana total y baseline de reglas como rollback. Se mantienen las condiciones para GO indicadas arriba.

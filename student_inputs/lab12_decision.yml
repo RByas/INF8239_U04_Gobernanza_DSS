@@ -1,6 +1,22 @@
-priority_harm: REPLACE
-primary_metric: REPLACE
-tolerance: REPLACE
-evidence: REPLACE
-limitation: REPLACE
-recommendation: REPLACE
+priority_harm: >-
+  Falso negativo: un caso con riesgo real queda al final de la cola y no se revisa a tiempo.
+  Daño secundario: falsos positivos concentrados en un grupo (revisiones innecesarias e intrusivas).
+primary_metric: >-
+  Recall global y brecha de recall entre G1 y G2; métrica secundaria brecha de FPR.
+tolerance: >-
+  Recall global >= 0.68; brecha de recall <= 0.16 y brecha de FPR <= 0.16 (configs/governance.yml).
+  No se interpreta ningún subgrupo interseccional con n < 30 (min_group_size).
+evidence: >-
+  Logistic: recall 0.717, recall G1 0.653 vs G2 0.791 (brecha 0.138, IC95 0.007-0.330),
+  FPR G1 0.250 vs G2 0.375 (brecha 0.125, IC95 0.005-0.397), 3.6 KB, 0.39 s.
+  Tree: mismo recall 0.717, brecha recall 0.181 y FPR 0.168 (fallan gates), 7.9 KB.
+  Baseline de reglas: brechas 0.048/0.072 pero recall 0.467 (falla min_recall).
+  Fuentes: reports/lab12/logistic, reports/lab12/tree, reports/lab12/model_comparison.csv.
+limitation: >-
+  Test de 160 casos: los IC95 de las brechas superan el umbral 0.16, así que cumplir el gate en la
+  estimación puntual no prueba equidad. Solo 1 de 8 subgrupos interseccionales (G1 | 45-59, n=35)
+  tiene soporte suficiente. Datos sintéticos; una brecha observada no prueba discriminación causal.
+recommendation: >-
+  Elegir regresión logística sobre el árbol (igual utilidad, menores brechas, menos de la mitad del tamaño).
+  Decisión LIMITAR: piloto en modo sombra con revisión humana de toda la cola y baseline de reglas como
+  respaldo; no GO hasta reducir la incertidumbre de las brechas con más datos y vigilar recall en G1 y FPR en G2.

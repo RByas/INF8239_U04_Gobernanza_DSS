@@ -6,6 +6,7 @@ prohibited_uses:
   - emergency declaration
 sensitive_features: [protected_group, age_band]
 direct_identifiers: [name, document_number, email, phone]
+min_group_size: 30
 gates:
   min_recall: 0.68
   max_recall_gap: 0.16
