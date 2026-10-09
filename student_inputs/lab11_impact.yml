@@ -1,9 +1,35 @@
-purpose: REPLACE
-assisted_decision: REPLACE
-users: REPLACE
-affected_population: REPLACE
-owner: REPLACE
-non_predictive_alternative: REPLACE
-out_of_scope_use: REPLACE
-withdrawal_condition: REPLACE
-appeal_mechanism: REPLACE
+purpose: >-
+  Ordenar casos territoriales sintéticos por probabilidad estimada de incidente para que
+  un equipo humano decida en qué orden revisarlos. El sistema solo prioriza la cola de
+  revisión; no decide intervenciones, elegibilidad ni emergencias.
+assisted_decision: >-
+  Orden de revisión humana de la cola diaria de casos recibidos (qué caso inspecciona
+  primero el analista). La decisión final sobre cada caso la toma y firma el operador.
+users: >-
+  Operadores/analistas territoriales que revisan casos y su supervisor; el equipo de datos
+  solo como mantenedor.
+affected_population: >-
+  Personas y hogares asociados a los casos territoriales (grupos G1 y G2, todas las franjas
+  de edad, zonas Norte, Sur, Este y Oeste); en especial G2, con mayor tasa base de incidentes
+  (0.639 vs 0.497) y peor puntaje de infraestructura.
+owner: >-
+  Product Owner institucional (accountable según raci.csv), con el Institutional Owner como
+  autoridad de contención y retiro.
+non_predictive_alternative: >-
+  Cola por orden de llegada (FIFO) combinada con reglas transparentes y auditables:
+  revisar primero casos con previous_incidents >= 5 o exposure >= 0.7, y rotación
+  equitativa por zona. Sirve también como baseline seguro de rollback.
+out_of_scope_use: >-
+  Intervención automática, decisión de elegibilidad para servicios o beneficios,
+  declaración de emergencia, perfilado de poblaciones reales, uso con datos reales sin
+  nueva evaluación de impacto, y cualquier uso de protected_group como criterio de decisión.
+withdrawal_condition: >-
+  Retirar y volver al baseline FIFO si: recall global < 0.68, brecha de recall o de FPR
+  entre G1 y G2 > 0.16 (gates de configs/governance.yml), se detecta un uso fuera de
+  alcance, aparece un identificador directo en los datos, o una apelación confirmada
+  revela daño atribuible al ranking.
+appeal_mechanism: >-
+  Cualquier persona afectada u operador puede solicitar revisión humana de un caso no
+  priorizado mediante formulario/ventanilla; un supervisor distinto al operador original
+  responde en 5 días hábiles, registra la causa y la apelación alimenta el registro de
+  riesgos y la auditoría de LAB12.

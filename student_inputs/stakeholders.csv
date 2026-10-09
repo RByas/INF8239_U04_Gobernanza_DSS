@@ -1,5 +1,6 @@
 stakeholder,benefit,harm,power,participation
-Affected person,REPLACE,REPLACE,low,REPLACE
-Operator,REPLACE,REPLACE,medium,REPLACE
-Institutional owner,REPLACE,REPLACE,high,REPLACE
-Data team,REPLACE,REPLACE,medium,REPLACE
+Affected person,Atención más temprana cuando su caso tiene riesgo real,Caso de riesgo real no priorizado (falso negativo) o revisión intrusiva innecesaria (falso positivo); desigualdad si pertenece a G2,low,Aviso de que se usa un sistema de apoyo; derecho a apelación humana; consulta a representantes antes de cada despliegue
+Operator,Cola ordenada que reduce carga y tiempo de búsqueda,Sesgo de automatización y responsabilidad por errores del modelo; pérdida de criterio propio,medium,Capacitación; puede reordenar o ignorar el ranking justificándolo; reporta errores en el registro de incidentes
+Institutional owner,Uso más eficiente de recursos de revisión y trazabilidad de decisiones,Daño reputacional y legal por trato desigual o uso fuera de alcance,high,Aprueba GO/REVIEW/STOP; firma el decision record; autoridad de retiro
+Data team,Producto evaluable con métricas y gates claros,Presión para desplegar con evidencia insuficiente; responsabilidad técnica por proxies y deriva,medium,Mantiene modelo y auditoría LAB12; propone mitigaciones; no decide despliegue
+Affected representatives,Voz colectiva sobre criterios de priorización,Exclusión del diseño si solo se consulta al final,low,Revisión de este expediente y de resultados por grupo antes de desplegar; canal para escalar quejas
