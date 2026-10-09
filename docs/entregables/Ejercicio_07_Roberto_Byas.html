@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Ejercicio 07 · Roberto Byas</title><link rel="stylesheet" href="estilo.css"></head>
+<body>
+
+<h1>U04.E07 · Evaluación de impacto y auditoría de equidad</h1>
+<div class="meta">Autor: Roberto Byas de la Cruz · INF-8239 Ciencia de Datos II · Universidad Autónoma de Santo Domingo<br>
+Repositorio: <b>https://github.com/RByas/INF8239_U04_Gobernanza_DSS</b> · Evidencias: LAB11 y LAB12</div>
+
+<div class="box">El caso es un DSS que ordena casos territoriales <b>sintéticos</b> para que un equipo humano decida qué revisar primero (640 casos; grupos G1/G2; corte temporal 480 train / 160 test). Todo lo que aparece aquí se puede regenerar desde el repositorio con los comandos de la sección 5. <b>Decisión final: MODIFICAR y LIMITAR</b>. Se usará una regresión logística con umbral candidato 0.4, en un piloto en modo sombra con revisión humana de toda la cola. No se despliega en producción.</div>
+
+<h2>1. Finalidad, interesados y proporcionalidad <span class="pts">0.75</span></h2>
+<table>
+<tr><th style="width:22%">Elemento</th><th>Definición (<code>student_inputs/lab11_impact.yml</code>)</th></tr>
+<tr><td>Finalidad</td><td>Ordenar la cola de revisión según la probabilidad estimada de incidente. El sistema solo prioriza; no decide sobre los casos.</td></tr>
+<tr><td>Decisión asistida</td><td>En qué orden revisa el analista. La decisión sobre cada caso la toma y firma el operador.</td></tr>
+<tr><td>Usuarios / afectados</td><td>Usuarios: analistas territoriales y su supervisor. Afectados: personas y hogares de los casos, en especial G2, que tiene mayor tasa base (0.639 frente a 0.497 en G1).</td></tr>
+<tr><td>Propietario</td><td>Product Owner institucional (accountable). La autoridad de retiro corresponde al Institutional Owner.</td></tr>
+<tr><td>Alternativa no predictiva</td><td>Orden de llegada (FIFO) más reglas transparentes: <code>previous_incidents ≥ 5</code> o <code>exposure ≥ 0.7</code>. Es también el baseline de rollback.</td></tr>
+<tr><td>Uso prohibido</td><td>Intervención automática, elegibilidad, declaración de emergencia, perfilado de poblaciones reales, y uso de <code>protected_group</code> para decidir.</td></tr>
+<tr><td>Retiro / apelación</td><td>Se retira si recall &lt; 0.68, si alguna brecha supera 0.16, si hay uso fuera de alcance, si aparece un identificador directo o si una apelación confirma daño. La apelación la resuelve un supervisor distinto del operador original en ≤ 5 días hábiles.</td></tr>
+</table>
+<p><b>Proporcionalidad.</b> El modelo solo se justifica si mejora a la alternativa menos invasiva en el daño prioritario, que es no revisar a tiempo un caso con riesgo real. La evidencia de la sección 3 muestra que sí lo hace: las reglas alcanzan un recall de 0.467 y el modelo 0.717–0.848. El modelo además es mínimo (logística de 3.6 KB, sin identificadores) y su autoridad se limita a ordenar una cola revisada por personas.</p>
+<p><b>Interesados</b> (<code>stakeholders.csv</code>, 5 actores):</p>
+<table>
+<tr><th>Actor</th><th>Beneficio</th><th>Daño posible</th><th>Poder</th><th>Participación</th></tr>
+<tr><td>Persona afectada</td><td>Atención temprana</td><td>Falso negativo o revisión intrusiva</td><td>bajo</td><td>Aviso, apelación, consulta previa</td></tr>
+<tr><td>Operador</td><td>Menos carga de búsqueda</td><td>Sesgo de automatización</td><td>medio</td><td>Puede reordenar e ignorar el ranking; reporta errores</td></tr>
+<tr><td>Institutional owner</td><td>Eficiencia y trazabilidad</td><td>Daño reputacional y legal</td><td>alto</td><td>Firma GO/LIMITAR/STOP; autoridad de retiro</td></tr>
+<tr><td>Equipo de datos</td><td>Producto evaluable</td><td>Presión para desplegar</td><td>medio</td><td>Mantiene y audita; no decide el despliegue</td></tr>
+<tr><td>Representantes de afectados</td><td>Voz colectiva</td><td>Exclusión del diseño</td><td>bajo</td><td>Revisan resultados por grupo antes del despliegue</td></tr>
+</table>
+
+<h2>2. Registro de riesgos y NIST AI RMF <span class="pts">1.00</span></h2>
+<p>Hay 10 riesgos con escenario, afectado, control, responsable y evidencia (<code>student_inputs/risk_register.csv</code>). La prioridad es probabilidad × impacto (escala 1–4) y la calcula <code>scripts/lab11_impact.py</code> en <code>reports/lab11/risk_register_scored.csv</code>.</p>
+<table>
+<tr><th>ID</th><th>Escenario (resumen)</th><th class="n">P</th><th class="n">I</th><th class="n">Prio.</th><th>Responsable</th><th>Residual</th></tr>
+<tr><td>R02</td><td>Proxies: <code>infrastructure_score</code> y <code>exposure</code> difieren entre grupos</td><td class="n">3</td><td class="n">3</td><td class="n">9</td><td>Data Scientist</td><td>medio</td></tr>
+<tr><td>R09</td><td>Subgrupos interseccionales pequeños con métricas inestables</td><td class="n">3</td><td class="n">3</td><td class="n">9</td><td>Data Scientist</td><td>medio</td></tr>
+<tr><td>R01</td><td>Recall desigual: G1 0.653 frente a G2 0.791; FPR mayor en G2</td><td class="n">2</td><td class="n">4</td><td class="n">8</td><td>Data Scientist</td><td>alto</td></tr>
+<tr><td>R07</td><td>Deriva temporal con un test de solo 160 casos</td><td class="n">2</td><td class="n">4</td><td class="n">8</td><td>ML Engineer</td><td>alto</td></tr>
+<tr><td>R03</td><td><code>age_band</code> es sensible pero se usa como predictor</td><td class="n">2</td><td class="n">3</td><td class="n">6</td><td>Data Scientist</td><td>medio</td></tr>
+<tr><td>R10</td><td>La etiqueta registra incidentes, no daño real (zona Sur 0.616)</td><td class="n">2</td><td class="n">3</td><td class="n">6</td><td>Product Owner</td><td>medio</td></tr>
+<tr><td>R06</td><td>Sesgo de automatización del operador</td><td class="n">3</td><td class="n">2</td><td class="n">6</td><td>Product Owner</td><td>medio</td></tr>
+<tr><td>R04</td><td>Uso fuera de alcance (elegibilidad, intervención)</td><td class="n">1</td><td class="n">4</td><td class="n">4</td><td>Product Owner</td><td>medio</td></tr>
+<tr><td>R05</td><td>Carga de identificadores directos</td><td class="n">2</td><td class="n">2</td><td class="n">4</td><td>Data Engineer</td><td>bajo</td></tr>
+<tr><td>R08</td><td>Falta de transparencia y de apelación</td><td class="n">1</td><td class="n">3</td><td class="n">3</td><td>Institutional Owner</td><td>bajo</td></tr>
+</table>
+<p><b>Lectura crítica del orden.</b> El puntaje coloca primero a R02 y R09, pero trato <b>R01</b> como el riesgo principal. Tiene impacto 4 y residual alto, y produce exactamente el daño que el sistema busca evitar. La puntuación ordena la atención, pero no mide el daño humano. Además, los tres riesgos principales recaen en el mismo rol, de modo que quien construye el modelo es también quien lo audita. Por eso el Product Owner valida las mitigaciones.</p>
+<p><b>Corrección por evidencia.</b> En LAB11 supuse que G2 tendría menor recall. LAB12 lo refutó: el recall más bajo es el de G1. R01 se reescribió con los datos (commit <code>4c36607</code>). El registro se trató como un documento vivo y no como un conjunto de supuestos fijos.</p>
+<table>
+<tr><th>Función NIST AI RMF</th><th>Estado</th><th>Evidencia en el repositorio</th></tr>
+<tr><td>GOVERN</td><td>Implementado</td><td>Propietario, autoridad de retiro, usos prohibidos (<code>configs/governance.yml</code>), RACI</td></tr>
+<tr><td>MAP</td><td>Implementado</td><td>Finalidad, 5 interesados, 10 riesgos con responsable y evidencia</td></tr>
+<tr><td>MEASURE</td><td>Implementado (LAB12)</td><td>Métricas globales, por grupo e interseccionales con n e IC95; mitigaciones</td></tr>
+<tr><td>MANAGE</td><td>Parcial</td><td>Condición de retiro, apelación y rollback documentados; runbook y simulacro en LAB13 / E08</td></tr>
+</table>
+
+<h2>3. Auditoría global, por grupo e interseccional <span class="pts">1.25</span></h2>
+<p>La auditoría usa <code>MetricFrame</code> de Fairlearn. <code>protected_group</code> se excluye de las variables predictoras y solo se usa para auditar. El umbral es 0.5 y el test tiene n = 160 (G1 101, G2 59). Los IC95 provienen de un bootstrap de 500 remuestreos con semilla 42 (<code>scripts/lab12_compare.py</code>).</p>
+<table>
+<tr><th>Modelo</th><th class="n">Acc.</th><th class="n">Recall</th><th class="n">FPR</th><th class="n">Rec. G1</th><th class="n">Rec. G2</th><th class="n">FPR G1</th><th class="n">FPR G2</th><th>Brecha recall [IC95]</th><th>Brecha FPR [IC95]</th><th class="n">KB</th></tr>
+<tr><td>Reglas (no predictivo)</td><td class="n">0.644</td><td class="n bad">0.467</td><td class="n">0.118</td><td class="n">0.490</td><td class="n">0.442</td><td class="n">0.135</td><td class="n">0.062</td><td>0.048 [0.004, 0.261]</td><td>0.072 [0.003, 0.215]</td><td class="n">0</td></tr>
+<tr><td>Logistic</td><td class="n">0.719</td><td class="n">0.717</td><td class="n">0.279</td><td class="n bad">0.653</td><td class="n">0.791</td><td class="n">0.250</td><td class="n">0.375</td><td>0.138 [0.007, 0.330]</td><td>0.125 [0.005, 0.397]</td><td class="n">3.6</td></tr>
+<tr><td>Árbol (prof. 5)</td><td class="n">0.706</td><td class="n">0.717</td><td class="n">0.309</td><td class="n">0.633</td><td class="n">0.814</td><td class="n">0.269</td><td class="n">0.438</td><td class="bad">0.181 [0.021, 0.334]</td><td class="bad">0.168 [0.006, 0.465]</td><td class="n">7.9</td></tr>
+</table>
+<ul>
+<li><b>El promedio oculta una falla localizada.</b> El recall global (0.717) supera el mínimo de 0.68, pero el de G1 (0.653) no.</li>
+<li><b>Hay dos daños opuestos.</b> G1 sufre más falsos negativos y G2 más falsos positivos (selection rate 0.678 frente a 0.446). El patrón es coherente con la diferencia de tasa base.</li>
+<li><b>La incertidumbre es alta.</b> El límite superior de los IC95 de ambas brechas supera 0.16. La logística cumple los gates solo en la estimación puntual.</li>
+<li><b>Árbol frente a logística.</b> Tienen la misma utilidad, pero el árbol tiene brechas peores y ocupa el doble. Siguiendo el criterio Green AI, se prefiere la opción suficiente.</li>
+</ul>
+<p><b>Interseccional (grupo × edad).</b> El mínimo documentado es <code>min_group_size: 30</code>. Solo <b>G1 | 45-59 (n = 35)</b> tiene soporte, con recall 0.588 y FPR 0.389, peor que el global. Los otros 7 subgrupos (n = 8 a 26) se <i>reportan</i> en <code>reports/lab12/support_warnings.json</code>, pero no se interpretan.</p>
+<p class="box"><b>Una brecha no es prueba de discriminación causal.</b> Puede venir de la etiqueta (R10), de proxies (R02), del umbral o del azar en una muestra pequeña. Es una señal que obliga a investigar con más datos, análisis por variable y revisión del proceso que genera <code>target</code>.</p>
+
+<h2>4. Mitigación, trade-offs y decisión <span class="pts">1.25</span></h2>
+<p>Las mitigaciones se evaluaron sobre la logística con <code>scripts/lab12_mitigation.py</code>, y los resultados están en <code>reports/lab12/mitigation.csv</code>.</p>
+<table>
+<tr><th>Variante</th><th class="n">Acc.</th><th class="n">Recall</th><th class="n">FPR</th><th class="n">Rec. G1</th><th class="n">Rec. G2</th><th class="n">Brecha rec.</th><th class="n">Brecha FPR</th><th>¿Usa grupo?</th><th>Veredicto</th></tr>
+<tr><td>Umbral 0.5 (referencia)</td><td class="n">0.719</td><td class="n">0.717</td><td class="n">0.279</td><td class="n">0.653</td><td class="n">0.791</td><td class="n">0.138</td><td class="n">0.125</td><td>no</td><td>G1 bajo el mínimo</td></tr>
+<tr><td><b>Umbral 0.4</b></td><td class="n">0.731</td><td class="n good">0.848</td><td class="n">0.426</td><td class="n good">0.816</td><td class="n">0.884</td><td class="n good">0.067</td><td class="n">0.096</td><td>no</td><td><b>Candidata</b></td></tr>
+<tr><td>Sin age_band</td><td class="n">0.725</td><td class="n">0.717</td><td class="n">0.265</td><td class="n">0.653</td><td class="n">0.791</td><td class="n">0.138</td><td class="n">0.144</td><td>no</td><td>Minimiza; no corrige G1</td></tr>
+<tr><td>Sin age_band + umbral 0.4</td><td class="n">0.719</td><td class="n">0.793</td><td class="n">0.382</td><td class="n">0.735</td><td class="n">0.860</td><td class="n">0.126</td><td class="n">0.072</td><td>no</td><td>Alternativa para el piloto</td></tr>
+<tr><td>Sin proxies</td><td class="n">0.650</td><td class="n">0.707</td><td class="n">0.426</td><td class="n">0.755</td><td class="n bad">0.651</td><td class="n">0.104</td><td class="n">0.067</td><td>no</td><td>Traslada el daño a G2</td></tr>
+<tr><td>ThresholdOptimizer (eq. odds)</td><td class="n">0.700</td><td class="n">0.804</td><td class="n">0.441</td><td class="n">0.837</td><td class="n">0.767</td><td class="n">0.069</td><td class="n bad">0.168</td><td class="bad">sí</td><td>Rechazada</td></tr>
+</table>
+<ul>
+<li><b>Umbral 0.4.</b> Ataca directamente el daño prioritario: el recall de G1 pasa de 0.653 a 0.816 y la brecha baja a 0.067. El costo es una FPR de 0.426 y 107 casos marcados frente a 85 (+26 % de carga). En una cola de revisión humana un falso positivo cuesta tiempo de analista, no una intervención, así que el intercambio es aceptable si la capacidad lo permite.</li>
+<li><b>Minimización frente a equidad.</b> Quitar <code>age_band</code> reduce datos sensibles, pero con umbral 0.4 baja el recall de G1 a 0.735. La tensión queda explícita y se decidirá con los datos del piloto.</li>
+<li><b>Quitar proxies</b> no es neutral: el recall de G2 cae a 0.651.</li>
+<li><b>ThresholdOptimizer</b> necesita <code>protected_group</code> al predecir, lo que la política prohíbe, y además falla la brecha de FPR.</li>
+<li><b>Limitación:</b> el umbral se comparó sobre el mismo test. Debe fijarse en una validación separada y confirmarse en el piloto.</li>
+</ul>
+<div class="box"><b>Decisión: MODIFICAR y LIMITAR</b> (no desplegar sin condiciones ni descartar el sistema).
+<ol>
+<li><b>Modificar:</b> regresión logística con umbral candidato 0.4, validado fuera del test.</li>
+<li><b>Limitar:</b> piloto en modo sombra; el operador revisa toda la cola, el ranking solo sugiere el orden y el baseline de reglas queda como rollback.</li>
+<li><b>Pasar a GO solo si</b> el piloto confirma recall ≥ 0.68 en cada grupo con n ≥ 30, las brechas son ≤ 0.16 con IC más estrechos, el análisis de proxies (R02) está documentado y la apelación funciona.</li>
+<li><b>STOP</b> ante cualquier condición de retiro de la sección 1.</li>
+</ol></div>
+
+<h3>Obligación legal, marco voluntario y recomendación ética</h3>
+<table>
+<tr><th style="width:18%">Tipo</th><th>Contenido aplicado</th><th style="width:28%">Alcance en este caso</th></tr>
+<tr><td><b>Obligación legal</b></td><td>Ley 172-13 de protección de datos personales de la República Dominicana (consentimiento, finalidad, calidad de datos y derechos del titular) y Constitución dominicana (igualdad y no discriminación, intimidad).</td><td>Aplicaría <b>si</b> el sistema usara datos reales de personas. Con datos sintéticos no hay titulares; sirve como diseño preventivo (sin identificadores, minimización).</td></tr>
+<tr><td><b>Marco voluntario</b></td><td>NIST AI RMF 1.0 (GOVERN, MAP, MEASURE, MANAGE); Recomendación de la OCDE sobre IA; buenas prácticas de Fairlearn.</td><td>Adoptado de forma voluntaria para estructurar el registro, la auditoría y la gestión.</td></tr>
+<tr><td><b>Recomendación ética</b></td><td>Revisión humana con autoridad real, apelación, no usar el grupo protegido para decidir, priorizar el daño a quien más lo sufre, reportar los subgrupos sin soporte en lugar de ocultarlos.</td><td>Son decisiones de valor del equipo, que este documento justifica pero que no derivan de una norma.</td></tr>
+</table>
+
+<h2>5. Pruebas, referencias y declaración de IA <span class="pts">0.75</span></h2>
+<pre>uv sync --frozen
+uv run pytest -q                                   # 10 passed
+uv run python scripts/lab11_impact.py              # risk_register_scored.csv, rmf_summary.json
+uv run python scripts/lab12_audit.py --model logistic
+uv run python scripts/lab12_audit.py --model tree
+uv run python scripts/lab12_compare.py             # baseline + IC95 + soporte interseccional
+uv run python scripts/lab12_mitigation.py          # mitigation.csv
+uv run python scripts/validate_lab12_decision.py   # decision_status: documented</pre>
+<p class="small">Entorno: Python 3.12.14, fairlearn 0.12.0, scikit-learn 1.9.1, Windows 11, semilla 42. Historial Git: <code>cd8fa55</code> init → <code>7abf7c6</code> fix scripts base → <code>3c31f14</code> LAB11 → <code>4c36607</code> LAB12 → <code>f3045de</code> LAB13 (tag <code>u04-lab13</code>), más los commits de mitigación y documentación.</p>
+<p><b>Hallazgo técnico:</b> <code>scripts/lab11_impact.py</code> y <code>simulate_incident.py</code> del proyecto base tenían strings sin cerrar (<code>SyntaxError</code>). Se corrigieron en un commit separado. Además, <code>DECISION_RECORD.md</code> se sobrescribía en cada ejecución; ahora solo se crea si no existe.</p>
+<p><b>Referencias.</b> NIST (2023). <i>AI Risk Management Framework (AI RMF 1.0)</i>. DOI 10.6028/NIST.AI.100-1. · OECD (2019). <i>Recommendation of the Council on Artificial Intelligence</i>. DOI 10.1787/cc2e1d3e-en. · Fairlearn Contributors. <i>Performing a Fairness Assessment</i>, documentación oficial. · República Dominicana. Ley 172-13 sobre protección integral de datos personales (2013).</p>
+<h3>Declaración de uso de IA</h3>
+<p>Herramienta: Claude (Anthropic, modelo Claude Opus 5.5) mediante Claude Code. Prompts relevantes: «aydame» con el manual LAB11 y el enunciado E07; «continuar si falta algo me indica» con los manuales LAB12/LAB13; «PROCEDER CON EL PUNTO 2» para este documento. La IA configuró el entorno, corrigió los scripts base, ejecutó las auditorías, escribió <code>lab12_compare.py</code> y <code>lab12_mitigation.py</code>, y redactó borradores de los insumos y de este documento. Verificaciones automáticas: las pruebas y los validadores indicados arriba. Errores detectados durante el proceso: la hipótesis de LAB11 sobre G2, refutada por los datos, y un commit que incluyó por error una copia anidada del proyecto, que se retiró.</p>
+<p class="todo"><b>[Completar por el estudiante]</b> Qué verificó personalmente (p. ej., recalcular una métrica de <code>fairness_by_group.csv</code>, revisar la escala de los 10 riesgos, comprobar la Ley 172-13 en su fuente) y qué cambió del borrador de la IA y por qué.</p>
+<p class="small">La IA no decidió los valores del análisis. El estudiante revisó y asume las puntuaciones de riesgo, la interpretación normativa y la decisión final, y puede defender cada elemento.</p>
+
+</body></html>

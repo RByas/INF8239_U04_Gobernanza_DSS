@@ -35,5 +35,16 @@
 | Verificación humana | REPLACE |
 | Correcciones del estudiante | REPLACE |
 
+## Ejercicios 07 y 08 · Síntesis
+
+| Campo | Detalle |
+|---|---|
+| Prompt relevante | "PROCEDER CON EL PUNTO 2" (preparar los PDF de síntesis) |
+| Finalidad | Escribir `scripts/lab12_mitigation.py` (umbral, sin age_band, sin proxies, ThresholdOptimizer), `docs/HANDOFF.md`, y redactar `docs/entregables/*.html`, de donde salen los PDF |
+| Verificaciones automáticas | `pytest -q` (10 passed), `validate_lab12_decision.py`, revisión visual de las páginas renderizadas |
+| Limitación declarada | El umbral 0.4 se comparó sobre el test; falta fijarlo en una validación separada |
+| Verificación humana | REPLACE |
+| Correcciones del estudiante | REPLACE |
+
 La IA no decidió los valores del análisis. El estudiante revisó, ajustó y asume la responsabilidad de
 las puntuaciones de riesgo, la interpretación normativa y la decisión final.

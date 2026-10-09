@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Ejercicio 08 · Roberto Byas</title><link rel="stylesheet" href="estilo.css"></head>
+<body>
+
+<h1>U04.E08 · Expediente de gobernanza y simulacro</h1>
+<div class="meta">Autor: Roberto Byas de la Cruz · INF-8239 Ciencia de Datos II · Universidad Autónoma de Santo Domingo<br>
+Repositorio: <b>https://github.com/RByas/INF8239_U04_Gobernanza_DSS</b> (tag <code>u04-lab13</code>) · Evidencias: LAB13 (con insumos de LAB11–12)</div>
+
+<div class="box">Este expediente reúne la gobernanza de un DSS en Streamlit que ordena casos territoriales <b>sintéticos</b> para revisión humana. Cada afirmación remite a un archivo o comando del repositorio. <b>Decisión final: MODIFICAR y LIMITAR.</b> El pipeline automático devuelve <code>GO</code>, pero la decisión humana lo anula de forma documentada porque el recall de G1 queda bajo el mínimo y la incertidumbre es alta. Se adopta un piloto en modo sombra con revisión humana total y rollback a reglas.</div>
+
+<h2>1. Inventario, minimización y retención <span class="pts">1.00</span></h2>
+<p>Fuente: <code>docs/DATASET_CARD.md</code>. El archivo <code>data/territorial_risk_synthetic.csv</code> tiene 640 filas, 9 columnas y fechas del 2026-01-01 al 2026-12-27.</p>
+<table>
+<tr><th>Columna</th><th>Rol</th><th>¿Modelo?</th><th>Minimización / justificación</th></tr>
+<tr><td>case_id</td><td>Seudónimo técnico</td><td>No</td><td>Solo trazabilidad</td></tr>
+<tr><td>received_date</td><td>Orden temporal</td><td>No</td><td>Solo para el corte temporal (sin fuga del futuro)</td></tr>
+<tr><td>zone</td><td>Contexto</td><td>Sí</td><td>Granularidad gruesa (4 zonas), sin direcciones</td></tr>
+<tr><td>protected_group</td><td><b>Sensible</b></td><td><b>No</b></td><td>Solo auditoría. Usarlo para decidir está prohibido.</td></tr>
+<tr><td>age_band</td><td><b>Sensible</b></td><td>Sí ⚠</td><td>Franjas en lugar de edad exacta. Quitarla cuesta recall en G1 con umbral 0.4 (0.816 → 0.735); la decisión queda para el piloto (R03).</td></tr>
+<tr><td>previous_incidents, infrastructure_score, exposure</td><td>Predictores</td><td>Sí</td><td>Las dos últimas son posibles proxies de grupo (R02). Quitarlas baja el recall de G2 a 0.651, por lo que se mantienen bajo vigilancia.</td></tr>
+<tr><td>target</td><td>Etiqueta</td><td>No</td><td>Registra incidentes, no daño real (R10)</td></tr>
+</table>
+<p><b>Control de minimización ejecutable:</b> <code>validate_schema</code> (<code>src/inf8239_u04/data.py</code>) rechaza <code>name</code>, <code>document_number</code>, <code>email</code> y <code>phone</code> <i>antes</i> de predecir. Lo verifican <code>tests/test_data.py::test_direct_identifier_rejected</code> y <code>tests/test_privacy.py</code>.</p>
+<table>
+<tr><th>Artefacto</th><th>Retención propuesta</th><th>Acceso</th><th>Disposición</th></tr>
+<tr><td>Datos de casos</td><td>Ciclo de revisión + 12 meses</td><td>Data Engineer y Data Scientist</td><td>Borrado seguro con registro</td></tr>
+<tr><td>Predicciones y logs de decisión</td><td>24 meses (apelaciones e incidentes)</td><td>Supervisor, ML Engineer, Legal</td><td>Agregación anónima</td></tr>
+<tr><td>Reportes de auditoría</td><td>Vida del sistema + 5 años</td><td>Equipo y responsables</td><td>Archivo institucional</td></tr>
+<tr><td>Modelos serializados</td><td>Vigente + 2 versiones (rollback)</td><td>ML Engineer</td><td>Eliminación de versiones sin uso</td></tr>
+</table>
+<p class="small">Los plazos son una propuesta académica razonada. Antes de un uso real deben contrastarse con la obligación legal aplicable (sección 6).</p>
+
+<h2>2. Datasheet y Model Card trazables <span class="pts">1.00</span></h2>
+<p><code>docs/DATASET_CARD.md</code> sigue la estructura de Gebru et al.: motivación, composición, procedencia, inventario, retención y usos. <code>docs/MODEL_CARD.md</code> sigue la de Mitchell et al.: uso previsto, fuera de alcance, datos y split, evaluación global y por grupo, Green AI, límites, supervisión, apelación, responsable y fecha. Cada cifra de la Model Card se puede rastrear hasta su origen:</p>
+<table>
+<tr><th>Afirmación en la Model Card</th><th>Valor</th><th>Origen verificable</th></tr>
+<tr><td>Split temporal</td><td>480 / 160; corte 2026-09-24 / 25</td><td><code>scripts/describe_dataset.py</code></td></tr>
+<tr><td>Recall global / por grupo</td><td>0.717 · G1 0.653 · G2 0.791</td><td><code>reports/lab13/fairness_by_group.csv</code>, <code>reports/lab12/logistic/</code></td></tr>
+<tr><td>Brechas e IC95</td><td>0.138 [0.007, 0.330] · 0.125 [0.005, 0.397]</td><td><code>reports/lab12/model_comparison.csv</code></td></tr>
+<tr><td>Estado de las puertas</td><td>GO (5/5 checks)</td><td><code>reports/lab13/deployment_decision.json</code></td></tr>
+<tr><td>Green AI</td><td>3.6 KB · 0.05 ms/caso; árbol 7.9 KB</td><td><code>deployment_decision.json</code>, <code>reports/lab12/tree/global_metrics.json</code></td></tr>
+<tr><td>Umbral candidato 0.4</td><td>Recall G1 0.816; +26 % de casos marcados</td><td><code>reports/lab12/mitigation.csv</code></td></tr>
+<tr><td>Soporte interseccional</td><td>1 de 8 subgrupos con n ≥ 30</td><td><code>reports/lab12/support_warnings.json</code></td></tr>
+<tr><td>Versión</td><td>paquete 0.1.0 · tag <code>u04-lab13</code></td><td><code>src/inf8239_u04/__init__.py</code>, <code>git tag</code></td></tr>
+</table>
+<p>El tablero (<code>app.py</code>) muestra esa misma trazabilidad: el aviso de caso sintético, el propósito, los usos prohibidos, las métricas por grupo, las puertas, la versión, la política, la evidencia y la decisión humana leída de <code>lab12_decision.yml</code>. También muestra una alerta cuando un grupo con n ≥ 30 queda bajo el recall mínimo, algo que el estado automático no refleja.</p>
+
+<h2>3. RACI y traspaso entre roles <span class="pts">1.00</span></h2>
+<p>Fuente: <code>student_inputs/raci.csv</code>, con 12 actividades. <code>validate_raci</code> exige R y A en cada fila y se ejecuta dentro de <code>scripts/lab13_governance.py</code>. Cada actividad tiene exactamente un Accountable.</p>
+<table>
+<tr><th>Actividad</th><th>R</th><th>A</th><th>C</th><th>I</th></tr>
+<tr><td>Calidad de datos</td><td>Data Engineer</td><td>Product Owner</td><td>Data Scientist</td><td>Repr. afectados</td></tr>
+<tr><td>Minimización y retención</td><td>Data Engineer</td><td>Institutional Owner</td><td>Legal</td><td>Data Scientist</td></tr>
+<tr><td>Evaluación de impacto</td><td>Data Scientist</td><td>Product Owner</td><td>Repr. afectados; Legal</td><td>Institutional Owner</td></tr>
+<tr><td>Auditoría de equidad</td><td>Data Scientist</td><td>Product Owner</td><td>Repr. afectados</td><td>Operadores</td></tr>
+<tr><td>Validación del modelo</td><td>Data Scientist</td><td>Product Owner</td><td>Data Engineer</td><td>Repr. afectados</td></tr>
+<tr><td>Despliegue</td><td>ML Engineer</td><td>Product Owner</td><td>Data Scientist</td><td>Usuarios</td></tr>
+<tr><td>Monitoreo y deriva</td><td>ML Engineer</td><td>Product Owner</td><td>Data Scientist</td><td>Institutional Owner</td></tr>
+<tr><td>Revisión y anulación de casos</td><td>Operador</td><td>Supervisor</td><td>Data Scientist</td><td>Persona afectada</td></tr>
+<tr><td>Apelaciones</td><td>Supervisor</td><td>Institutional Owner</td><td>Legal</td><td>Persona afectada</td></tr>
+<tr><td>Respuesta a incidentes</td><td>ML Engineer</td><td>Institutional Owner</td><td>Legal y Data Scientist</td><td>Repr. afectados</td></tr>
+<tr><td>Rollback al baseline</td><td>ML Engineer</td><td>Institutional Owner</td><td>Product Owner</td><td>Operadores; Usuarios</td></tr>
+<tr><td>Comunicación externa</td><td>Product Owner</td><td>Institutional Owner</td><td>Legal</td><td>Repr. afectados</td></tr>
+</table>
+<p><b>Separación de funciones.</b> Quien construye el modelo (Data Scientist) no aprueba su despliegue (Product Owner), y quien despliega (ML Engineer) no decide la contención (Institutional Owner).</p>
+<p><b>Traspasos</b> (<code>docs/HANDOFF.md</code>). La responsabilidad solo pasa al siguiente rol cuando se cumple un criterio verificable:</p>
+<table>
+<tr><th>De → A</th><th>Criterio de aceptación</th><th>Si falla</th></tr>
+<tr><td>Data Engineer → Data Scientist</td><td><code>test_data.py</code> y <code>test_privacy.py</code> en verde; <code>dataset_status: valid</code></td><td>Se devuelve el lote</td></tr>
+<tr><td>Data Scientist → Product Owner</td><td>Validadores de LAB11/12 sin error; auditoría con n e IC95</td><td>Sin firma; REVIEW</td></tr>
+<tr><td>Product Owner → ML Engineer</td><td>Decisión firmada con condiciones; puertas visibles</td><td>No se despliega</td></tr>
+<tr><td>ML Engineer → Operadores</td><td><code>pytest -q</code> (incluye AppTest) en verde; capacitación registrada</td><td>Se mantiene el baseline</td></tr>
+<tr><td>Operador → Supervisor</td><td>Desacuerdo o apelación registrados; respuesta en ≤ 5 días hábiles</td><td>Escala al Institutional Owner</td></tr>
+<tr><td>ML Engineer → Institutional Owner</td><td>Alerta clasificada en &lt; 24 h; evidencia congelada</td><td>Contención al baseline</td></tr>
+</table>
+
+<h2>4. Monitoreo, runbook y simulacro <span class="pts">1.25</span></h2>
+<table>
+<tr><th>Señal monitoreada (mensual o ante alerta)</th><th>Umbral</th><th>Severidad</th></tr>
+<tr><td>Recall global</td><td>&lt; 0.68</td><td>Alta</td></tr>
+<tr><td>Brecha de recall o FPR entre G1 y G2</td><td>&gt; 0.16</td><td>Alta</td></tr>
+<tr><td>Recall de un grupo con n ≥ 30</td><td>&lt; 0.68</td><td>Media</td></tr>
+<tr><td>Identificador directo / uso fuera de alcance</td><td>Cualquier caso</td><td>Crítica</td></tr>
+<tr><td>Apelación con daño confirmado</td><td>1</td><td>Alta</td></tr>
+<tr><td>Latencia / tamaño del modelo</td><td>&gt; 500 ms / &gt; 1024 KB</td><td>Baja</td></tr>
+</table>
+<p><b>Runbook</b> (<code>docs/RUNBOOK.md</code>), en seis pasos con responsable:</p>
+<ol>
+<li>Detección y clasificación en &lt; 24 h (ML Engineer).</li>
+<li>Contención: decide el Institutional Owner. Si la severidad es alta o crítica, la suspensión es inmediata y la cola vuelve al baseline de reglas + FIFO.</li>
+<li>Preservación de la evidencia: modelo, hash del commit, reportes y lote de datos, en solo lectura.</li>
+<li>Comunicación a operadores, a las personas afectadas (con revisión prioritaria) y a sus representantes, con revisión de Legal.</li>
+<li>Rollback al baseline. Solo se vuelve al modelo con una nueva auditoría y la firma del Product Owner.</li>
+<li>Postmortem sin culpables en ≤ 10 días hábiles.</li>
+</ol>
+<p><b>Simulacro con señal real</b> (<code>reports/lab13/INCIDENT_POSTMORTEM.md</code>). Se simuló que se desplegaba el modelo árbol en lugar del aprobado y se pasó por las mismas puertas:</p>
+<pre>uv run python scripts/simulate_incident.py
+uv run python -c "from inf8239_u04.data import load_data; from inf8239_u04.governance import load_config; from inf8239_u04.pipeline import run; print(run(load_data(),load_config()['gates'],kind='tree')['decision'])"
+→ {'status': 'REVIEW', 'failed': ['recall_gap', 'fpr_gap'], ...}   # brecha recall 0.181, FPR 0.168</pre>
+<p>La puerta fallida produjo <code>REVIEW</code> y no se ocultó. Después se ejecutaron los pasos 1–6 y el rollback (<code>lab13_governance.py</code> restaura la logística).</p>
+<p><b>Causa raíz encontrada:</b> las puertas recomiendan, pero no <i>bloquean</i> el despliegue, y no evalúan el recall por grupo. Por eso el GO de la logística oculta que el recall de G1 es 0.653.</p>
+<table>
+<tr><th>Acción correctiva</th><th>Responsable</th><th>Fecha</th></tr>
+<tr><td>El despliegue exige <code>status: GO</code> + firma del Product Owner (bloqueo en CI)</td><td>ML Engineer</td><td>2026-10-22</td></tr>
+<tr><td>Gate de recall mínimo por grupo con n ≥ 30</td><td>Data Scientist</td><td>2026-10-22</td></tr>
+<tr><td>Incluir IC95 de las brechas en <code>deployment_decision.json</code></td><td>Data Scientist</td><td>2026-10-29</td></tr>
+<tr><td>Repetir el simulacro con el procedimiento corregido</td><td>Product Owner</td><td>2026-11-05</td></tr>
+</table>
+<p class="box"><b>Lección:</b> un archivo de control no es un control eficaz. La puerta solo protege si alguien con autoridad la aplica.</p>
+
+<h2>5. Pruebas, Git y calidad documental <span class="pts">0.75</span></h2>
+<pre>uv sync --frozen
+uv run pytest -q                              # 10 passed: datos, privacidad, equidad, modelo, impacto, gobernanza, AppTest Streamlit
+uv run python scripts/lab13_governance.py     # valida RACI + puertas → deployment_decision.json
+uv run streamlit run app.py                   # tablero verificado en navegador
+uv export --format requirements-txt --no-dev -o requirements.txt</pre>
+<table>
+<tr><th>Prueba post instalación</th><th>Resultado</th><th>Evidencia</th></tr>
+<tr><td>Inicio</td><td class="good">Abre sin excepciones y muestra «sintético»</td><td><code>tests/test_app.py</code></td></tr>
+<tr><td>Contrato</td><td class="good">Columna prohibida rechazada antes de predecir</td><td><code>tests/test_data.py</code>, <code>tests/test_privacy.py</code></td></tr>
+<tr><td>Puerta</td><td class="good">Brecha fuera de tolerancia → REVIEW</td><td><code>tests/test_governance.py</code> + simulacro con el árbol</td></tr>
+<tr><td>Trazabilidad</td><td class="good">Versión, política, evidencia y acción humana visibles</td><td><code>app.py</code> (sección «Trazabilidad y decisión humana»)</td></tr>
+</table>
+<p class="small">Historial Git: <code>cd8fa55</code> init · <code>7abf7c6</code> fix de strings sin cerrar en los scripts base · <code>3c31f14</code> LAB11 · <code>4c36607</code> LAB12 · <code>f3045de</code> LAB13 (tag <code>u04-lab13</code>) · commits posteriores de mitigación y documentación. El repositorio no contiene datos personales ni secretos (<code>.streamlit/secrets.toml</code> está ignorado). Entorno: Python 3.12.14, Streamlit 1.64.0, scikit-learn 1.9.1, fairlearn 0.12.0.</p>
+
+<h2>6. Obligación legal, marco voluntario, recomendación ética y decisión</h2>
+<table>
+<tr><th style="width:18%">Tipo</th><th>Aplicación en este expediente</th></tr>
+<tr><td><b>Obligación legal</b></td><td>Ley 172-13 de protección de datos personales (República Dominicana): finalidad, calidad, seguridad y derechos del titular, que sustentan la minimización, el rechazo de identificadores y la retención limitada. Constitución dominicana: igualdad e intimidad. <i>Con datos sintéticos no hay titulares reales; las obligaciones se aplican como diseño preventivo y serían exigibles con datos reales.</i></td></tr>
+<tr><td><b>Marco voluntario</b></td><td>NIST AI RMF 1.0 (GOVERN: RACI y propietario; MAP: inventario; MEASURE: auditoría; MANAGE: runbook y simulacro). Model Cards (Mitchell et al.) y Datasheets (Gebru et al.) como formato de documentación.</td></tr>
+<tr><td><b>Recomendación ética</b></td><td>Revisión humana con autoridad real para anular, separación de funciones, apelación con plazo, comunicación a afectados tras un incidente, y no ocultar subgrupos sin soporte.</td></tr>
+</table>
+<div class="box"><b>Decisión final: MODIFICAR y LIMITAR.</b> No se despliega en producción ni se descarta el sistema. Se modifica (umbral candidato 0.4 y gate de recall por grupo) y se limita a un piloto en modo sombra con revisión humana de toda la cola y rollback a reglas. Se pasa a GO solo si el piloto confirma recall ≥ 0.68 en cada grupo con soporte, brechas ≤ 0.16 con IC más estrechos, la apelación funcionando y las acciones correctivas del simulacro cerradas.</div>
+
+<h3>Declaración de uso de IA</h3>
+<p>Herramienta: Claude (Anthropic, modelo Claude Opus 5.5) mediante Claude Code. Prompts relevantes: «continuar si falta algo me indica» con el manual LAB13 y el enunciado E08, y «PROCEDER CON EL PUNTO 2» para este documento. La IA amplió la RACI y redactó la Dataset Card, la Model Card, el Runbook, <code>HANDOFF.md</code> y el postmortem. También diseñó el simulacro con señal real (modelo árbol), añadió trazabilidad y la alerta por grupo a <code>app.py</code>, exportó <code>requirements.txt</code> y redactó este documento. Verificaciones: <code>pytest -q</code> (10 passed), revisión del tablero en el navegador y el simulacro con resultado REVIEW. La IA no hizo interpretación jurídica vinculante.</p>
+<p class="todo"><b>[Completar por el estudiante]</b> Qué verificó personalmente (p. ej., abrir el tablero, revisar la RACI y los plazos de retención, consultar la Ley 172-13) y qué corrigió del borrador de la IA y por qué.</p>
+<p class="small">Referencias: NIST AI RMF 1.0, DOI 10.6028/NIST.AI.100-1 · Mitchell et al. (2019), <i>Model Cards for Model Reporting</i>, DOI 10.1145/3287560.3287596 · Gebru et al. (2021), <i>Datasheets for Datasets</i>, DOI 10.1145/3458723 · Streamlit, <i>App testing (st.testing.v1.AppTest)</i>, documentación oficial · Ley 172-13 (República Dominicana).</p>
+
+</body></html>

@@ -71,3 +71,32 @@ Durante el piloto se vigilan el recall de G1 y la FPR de G2.
 
 **Acción humana:** el Product Owner revisa este informe y firma la decisión. El Data Scientist
 investiga G1 | 45-59 y los proxies (R02) antes de la siguiente revisión.
+
+## 6. Mitigaciones evaluadas (`uv run python scripts/lab12_mitigation.py` → `reports/lab12/mitigation.csv`)
+
+| Variante | Accuracy | Recall | FPR | Recall G1 | Recall G2 | Brecha recall | Brecha FPR | ¿Usa grupo? |
+|---|---|---|---|---|---|---|---|---|
+| Logistic, umbral 0.5 (referencia) | 0.719 | 0.717 | 0.279 | 0.653 | 0.791 | 0.138 | 0.125 | no |
+| Umbral 0.45 | 0.712 | 0.739 | 0.324 | 0.673 | 0.814 | 0.140 | 0.149 | no |
+| **Umbral 0.4** | 0.731 | **0.848** | 0.426 | **0.816** | 0.884 | **0.067** | 0.096 | no |
+| Sin age_band | 0.725 | 0.717 | 0.265 | 0.653 | 0.791 | 0.138 | 0.144 | no |
+| Sin age_band + umbral 0.4 | 0.719 | 0.793 | 0.382 | 0.735 | 0.860 | 0.126 | 0.072 | no |
+| Sin proxies (solo previous_incidents) | 0.650 | 0.707 | 0.426 | 0.755 | 0.651 | 0.104 | 0.067 | no |
+| ThresholdOptimizer (equalized odds) | 0.700 | 0.804 | 0.441 | 0.837 | 0.767 | 0.069 | **0.168** | **sí** |
+
+**Trade-offs:**
+- **Umbral 0.4.** Ataca directamente el daño prioritario: el recall de G1 pasa de 0.653 a 0.816 y la brecha
+  de recall baja a 0.067. El costo es más revisiones innecesarias: la FPR pasa de 0.279 a 0.426 y los casos
+  marcados de 85 a 107 de cada 160 (+26 % de carga para los operadores). En una cola de **revisión humana**
+  un falso positivo cuesta tiempo, no una intervención, así que el intercambio es aceptable si hay capacidad.
+- **Quitar age_band.** Reduce datos sensibles (minimización, R03) casi sin costo con umbral 0.5. Con umbral
+  0.4, en cambio, el recall de G1 baja de 0.816 a 0.735. Hay tensión entre minimización y equidad; se
+  documenta y queda para el piloto.
+- **Quitar proxies.** El recall de G2 cae a 0.651 y la accuracy a 0.650. Las variables aportan señal real,
+  así que eliminarlas traslada el daño a G2. Se descarta y se mantiene el seguimiento de R02.
+- **ThresholdOptimizer.** Iguala el recall, pero **necesita `protected_group` al predecir**. Eso es un uso
+  fuera de alcance según `lab11_impact.yml` y además falla la brecha de FPR (0.168). Se rechaza.
+
+**Limitación metodológica:** el umbral se comparó sobre el mismo test de 160 casos, lo que da una
+estimación optimista. Antes de adoptarlo hay que fijarlo en una validación separada (por ejemplo, el último
+tramo de train) y confirmarlo en el piloto.

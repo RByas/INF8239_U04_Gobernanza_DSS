@@ -17,6 +17,7 @@ limitation: >-
   estimación puntual no prueba equidad. Solo 1 de 8 subgrupos interseccionales (G1 | 45-59, n=35)
   tiene soporte suficiente. Datos sintéticos; una brecha observada no prueba discriminación causal.
 recommendation: >-
-  Elegir regresión logística sobre el árbol (igual utilidad, menores brechas, menos de la mitad del tamaño).
-  Decisión LIMITAR: piloto en modo sombra con revisión humana de toda la cola y baseline de reglas como
-  respaldo; no GO hasta reducir la incertidumbre de las brechas con más datos y vigilar recall en G1 y FPR en G2.
+  MODIFICAR y LIMITAR. Regresión logística (no árbol: igual utilidad, menores brechas, menos de la mitad del tamaño)
+  con umbral candidato 0.4 (recall G1 0.816, brecha recall 0.067, brecha FPR 0.096; costo +26 % de casos marcados),
+  a confirmar en validación separada. Piloto en modo sombra con revisión humana de toda la cola y baseline de reglas
+  como respaldo. ThresholdOptimizer rechazado por requerir protected_group. Ver reports/lab12/mitigation.csv.

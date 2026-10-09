@@ -53,8 +53,10 @@ El costo es despreciable frente a los límites (500 ms y 1024 KB).
   anular decisiones. El Institutional Owner puede detener el sistema.
 - **Apelación:** solicitud de revisión humana con respuesta de un supervisor distinto en 5 días hábiles
   (`student_inputs/lab11_impact.yml`).
-- **Decisión humana: LIMITAR.** Piloto en modo sombra con baseline de reglas como rollback. Anula el GO
-  automático por los tres límites anteriores.
+- **Decisión humana: MODIFICAR y LIMITAR.** Piloto en modo sombra con baseline de reglas como rollback.
+  Anula el GO automático por los tres límites anteriores. Umbral candidato 0.4 (recall G1 0.816, brecha de
+  recall 0.067, brecha de FPR 0.096, +26 % de casos marcados; `reports/lab12/mitigation.csv`), pendiente
+  de fijarlo en una validación separada. ThresholdOptimizer se rechazó porque requiere `protected_group`.
 
 ## Owner and review date
 Accountable: Product Owner institucional. Mantenimiento técnico: Data Scientist y ML Engineer
