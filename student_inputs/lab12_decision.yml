@@ -1,6 +1,6 @@
-priority_harm: REPLACE
-primary_metric: REPLACE
-tolerance: REPLACE
-evidence: REPLACE
-limitation: REPLACE
-recommendation: REPLACE
+priority_harm: "Falsos negativos: un caso con riesgo real que el modelo no prioriza queda sin revisión humana oportuna; afecta más al grupo G1."
+primary_metric: "Recall (true positive rate) por grupo, con la brecha de FPR entre grupos como métrica secundaria."
+tolerance: "Recall mínimo de 0.68 en cada grupo y brechas de recall y de FPR entre grupos de 0.16 o menos (configs/governance.yml)."
+evidence: "Modelo logístico: recall global 0.717, recall G1 0.653, recall G2 0.791 (brecha 0.138), FPR G1 0.250, FPR G2 0.375 (brecha 0.125). Árbol: brecha de recall 0.181 y de FPR 0.168, ambas fuera de tolerancia. Fuente: reports/lab12/<modelo>/global_metrics.json y fairness_by_group.csv."
+limitation: "Prueba temporal de 160 casos (101 G1, 59 G2); subgrupos interseccionales con menos de 30 casos (G2 | 45-59 tiene 8), por lo que sus métricas son inestables. Los datos son sintéticos y no permiten conclusiones sobre la población real."
+recommendation: "LIMITAR: descartar el árbol; usar el modelo logístico solo como orden de revisión con supervisión humana total, mitigar el recall de G1 (que no llega a 0.68) antes de cualquier despliegue y repetir la auditoría con más datos."
