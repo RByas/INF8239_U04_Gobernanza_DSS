@@ -1,5 +1,5 @@
 stakeholder,benefit,harm,power,participation
-Affected person,REPLACE,REPLACE,low,REPLACE
-Operator,REPLACE,REPLACE,medium,REPLACE
-Institutional owner,REPLACE,REPLACE,high,REPLACE
-Data team,REPLACE,REPLACE,medium,REPLACE
+Affected person,Revisión más temprana de casos con riesgo real,Quedar fuera de la revisión por un falso negativo o ser señalado de más por un falso positivo,low,Consulta previa con representantes y derecho de apelación con revisión humana
+Operator,Cola de trabajo ordenada y explicación de cada puntuación,Sesgo de automatización y responsabilidad por decisiones basadas en una puntuación errónea,medium,Capacitación obligatoria y registro de desacuerdos con el modelo en cada revisión
+Institutional owner,Uso más eficiente de la capacidad de revisión con trazabilidad,Daño reputacional y legal si el sistema discrimina o se usa fuera de alcance,high,Aprueba o rechaza el despliegue con evidencia de LAB12 y firma el registro de decisión
+Data team,Evidencia reproducible para mejorar el modelo,Errores no detectados en datos o métricas que se trasladan a las personas afectadas,medium,Mantiene pruebas y auditoría por grupo y reporta brechas al propietario

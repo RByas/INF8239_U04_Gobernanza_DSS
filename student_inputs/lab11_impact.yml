@@ -1,9 +1,9 @@
-purpose: REPLACE
-assisted_decision: REPLACE
-users: REPLACE
-affected_population: REPLACE
-owner: REPLACE
-non_predictive_alternative: REPLACE
-out_of_scope_use: REPLACE
-withdrawal_condition: REPLACE
-appeal_mechanism: REPLACE
+purpose: "Ordenar casos territoriales sintéticos por prioridad para que un analista humano decida cuáles revisar primero; no clasifica personas ni asigna recursos de forma automática."
+assisted_decision: "Orden de la cola de revisión técnica: el operador decide si revisa, posterga o descarta cada caso; el sistema solo aporta una puntuación y su explicación."
+users: "Operadores técnicos de revisión territorial capacitados en el uso del DSS y sus limitaciones."
+affected_population: "Personas y comunidades representadas por los 640 casos sintéticos (zonas Norte, Sur, Este y Oeste; grupos G1 y G2; cuatro bandas de edad), en especial quienes queden fuera de la revisión por un falso negativo."
+owner: "Product Owner institucional, responsable (Accountable) del despliegue, del retiro y de responder apelaciones."
+non_predictive_alternative: "Revisión en orden de llegada (FIFO) combinada con una regla transparente de umbrales públicos sobre incidentes previos y exposición, aplicada y auditada por personas."
+out_of_scope_use: "Decisiones automáticas de intervención, elegibilidad para programas o beneficios, declaración de emergencias, perfilado de personas reales o inferencias sobre la población de República Dominicana."
+withdrawal_condition: "Retirar o volver a la alternativa FIFO si el recall global baja de 0.68, si la brecha de recall o de FPR entre grupos supera 0.16, si se detecta uso fuera de alcance o si se confirma un incidente con daño a personas afectadas."
+appeal_mechanism: "Cualquier persona o comunidad afectada puede solicitar revisión humana del orden asignado; un analista distinto revisa el caso sin la puntuación del modelo, responde por escrito en 10 días hábiles y el resultado queda en el registro de incidentes."

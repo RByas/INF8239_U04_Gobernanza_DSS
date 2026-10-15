@@ -1,9 +1,9 @@
 id,scenario,affected,likelihood_1_4,impact_1_4,control,owner,evidence,residual
-R01,REPLACE,REPLACE,2,4,REPLACE,REPLACE,REPLACE,high
-R02,REPLACE,REPLACE,3,3,REPLACE,REPLACE,REPLACE,medium
-R03,REPLACE,REPLACE,2,3,REPLACE,REPLACE,REPLACE,medium
-R04,REPLACE,REPLACE,1,4,REPLACE,REPLACE,REPLACE,medium
-R05,REPLACE,REPLACE,2,2,REPLACE,REPLACE,REPLACE,low
-R06,REPLACE,REPLACE,3,2,REPLACE,REPLACE,REPLACE,medium
-R07,REPLACE,REPLACE,2,4,REPLACE,REPLACE,REPLACE,high
-R08,REPLACE,REPLACE,1,3,REPLACE,REPLACE,REPLACE,low
+R01,Falsos negativos dejan sin revisión casos con riesgo real (recall de G1 menor que el de G2),Personas afectadas del grupo G1,2,4,Umbral con recall mínimo 0.68 y revisión humana de una muestra de casos descartados,Data Scientist,reports/lab12/<modelo>/fairness_by_group.csv y global_metrics.json,high
+R02,Más falsos positivos en G2 (brecha de FPR entre grupos) concentra revisiones innecesarias en un grupo,Personas afectadas del grupo G2,3,3,Brecha máxima de FPR de 0.16 como compuerta de despliegue y auditoría por grupo en cada versión,Data Scientist,reports/lab12/<modelo>/global_metrics.json (differences.fpr),medium
+R03,Subgrupos interseccionales pequeños (por ejemplo G2 | 45-59 con 8 casos de prueba) producen métricas inestables,Personas de subgrupos interseccionales pequeños,2,3,Reportar el conteo de cada subgrupo y no decidir con subgrupos de menos de 30 casos sin revisión cualitativa,Data Scientist,reports/lab12/<modelo>/fairness_intersectional.csv (columna count),medium
+R04,Uso fuera de alcance: la puntuación se usa para decidir elegibilidad o intervención automática,Comunidades de todas las zonas,1,4,Usos prohibidos en configs/governance.yml y en la Model Card; la interfaz no permite acciones automáticas,Product Owner,configs/governance.yml (prohibited_uses) y docs/MODEL_CARD.md,medium
+R05,Ingreso de identificadores directos (nombre o documento) en los datos de entrada,Personas afectadas,2,2,Validación de esquema que rechaza columnas prohibidas y prueba automática de privacidad,Data Engineer,src/inf8239_u04/data.py y tests/test_privacy.py,low
+R06,Sesgo de automatización: el operador acepta la puntuación sin revisar el caso,Personas afectadas y operadores,3,2,Capacitación y registro obligatorio del motivo de la decisión humana en cada caso,Product Owner,Registro de decisiones del operador y docs/RUNBOOK.md,medium
+R07,Deriva temporal: los casos posteriores a septiembre de 2026 cambian y el modelo pierde recall,Personas afectadas de todas las zonas,2,4,Partición temporal en la evaluación y monitoreo mensual de recall y brechas con condición de retiro,ML Engineer,src/inf8239_u04/data.py (temporal_split) y reports/lab13/deployment_decision.json,high
+R08,No existe una vía clara para apelar el orden asignado,Personas afectadas,1,3,Mecanismo de apelación con revisión humana sin puntuación y respuesta en 10 días hábiles,Institutional Owner,student_inputs/lab11_impact.yml (appeal_mechanism) y registro de incidentes,low
