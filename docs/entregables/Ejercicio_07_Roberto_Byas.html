@@ -63,6 +63,8 @@ Repositorio: <b>https://github.com/RByas/INF8239_U04_Gobernanza_DSS</b> · Evide
 <tr><td>Logistic</td><td class="n">0.719</td><td class="n">0.717</td><td class="n">0.279</td><td class="n bad">0.653</td><td class="n">0.791</td><td class="n">0.250</td><td class="n">0.375</td><td>0.138 [0.007, 0.330]</td><td>0.125 [0.005, 0.397]</td><td class="n">3.6</td></tr>
 <tr><td>Árbol (prof. 5)</td><td class="n">0.706</td><td class="n">0.717</td><td class="n">0.309</td><td class="n">0.633</td><td class="n">0.814</td><td class="n">0.269</td><td class="n">0.438</td><td class="bad">0.181 [0.021, 0.334]</td><td class="bad">0.168 [0.006, 0.465]</td><td class="n">7.9</td></tr>
 </table>
+<figure><img src="figs/e07_recall_fpr_grupo.png" alt=""><figcaption><b>Figura 1.</b> Recall y FPR por grupo (test, n = 160). Con la logística y el árbol, G1 queda bajo el mínimo de 0.68 (0.653 y 0.633), mientras G2 lo supera; la FPR es mayor en G2. Las reglas tienen brechas pequeñas porque fallan en ambos grupos.</figcaption></figure>
+<figure><img src="figs/e07_brechas_ic95.png" alt=""><figcaption><b>Figura 2.</b> Brechas G1–G2 con IC95 bootstrap (500 remuestreos, semilla 42). El árbol supera la tolerancia de 0.16 en ambas brechas; en los tres modelos el límite superior del IC95 supera 0.16, así que cumplir la tolerancia en el punto no prueba equidad.</figcaption></figure>
 <ul>
 <li><b>El promedio oculta una falla localizada.</b> El recall global (0.717) supera el mínimo de 0.68, pero el de G1 (0.653) no.</li>
 <li><b>Hay dos daños opuestos.</b> G1 sufre más falsos negativos y G2 más falsos positivos (selection rate 0.678 frente a 0.446). El patrón es coherente con la diferencia de tasa base.</li>
@@ -70,6 +72,7 @@ Repositorio: <b>https://github.com/RByas/INF8239_U04_Gobernanza_DSS</b> · Evide
 <li><b>Árbol frente a logística.</b> Tienen la misma utilidad, pero el árbol tiene brechas peores y ocupa el doble. Siguiendo el criterio Green AI, se prefiere la opción suficiente.</li>
 </ul>
 <p><b>Interseccional (grupo × edad).</b> El mínimo documentado es <code>min_group_size: 30</code>. Solo <b>G1 | 45-59 (n = 35)</b> tiene soporte, con recall 0.588 y FPR 0.389, peor que el global. Los otros 7 subgrupos (n = 8 a 26) se <i>reportan</i> en <code>reports/lab12/support_warnings.json</code>, pero no se interpretan.</p>
+<figure><img src="figs/e07_interseccional.png" alt=""><figcaption><b>Figura 3.</b> Recall interseccional de la logística con el tamaño de cada subgrupo. Solo G1 | 45-59 (n = 35) alcanza el mínimo de 30 casos y queda bajo 0.68 (0.59). Los subgrupos en gris se muestran, pero no se interpretan.</figcaption></figure>
 <p class="box"><b>Una brecha no es prueba de discriminación causal.</b> Puede venir de la etiqueta (R10), de proxies (R02), del umbral o del azar en una muestra pequeña. Es una señal que obliga a investigar con más datos, análisis por variable y revisión del proceso que genera <code>target</code>.</p>
 
 <h2>4. Mitigación, trade-offs y decisión <span class="pts">1.25</span></h2>
@@ -83,6 +86,7 @@ Repositorio: <b>https://github.com/RByas/INF8239_U04_Gobernanza_DSS</b> · Evide
 <tr><td>Sin proxies</td><td class="n">0.650</td><td class="n">0.707</td><td class="n">0.426</td><td class="n">0.755</td><td class="n bad">0.651</td><td class="n">0.104</td><td class="n">0.067</td><td>no</td><td>Traslada el daño a G2</td></tr>
 <tr><td>ThresholdOptimizer (eq. odds)</td><td class="n">0.700</td><td class="n">0.804</td><td class="n">0.441</td><td class="n">0.837</td><td class="n">0.767</td><td class="n">0.069</td><td class="n bad">0.168</td><td class="bad">sí</td><td>Rechazada</td></tr>
 </table>
+<figure><img src="figs/e07_mitigacion.png" alt=""><figcaption><b>Figura 4.</b> Trade-off de las mitigaciones: recall de G1 frente a FPR global (costo en revisiones innecesarias). El umbral 0.4 es la única variante que no usa <code>protected_group</code> y lleva a G1 sobre 0.68 con la menor brecha (0.067); ThresholdOptimizer queda descartado por usar el grupo.</figcaption></figure>
 <ul>
 <li><b>Umbral 0.4.</b> Ataca directamente el daño prioritario: el recall de G1 pasa de 0.653 a 0.816 y la brecha baja a 0.067. El costo es una FPR de 0.426 y 107 casos marcados frente a 85 (+26 % de carga). En una cola de revisión humana un falso positivo cuesta tiempo de analista, no una intervención, así que el intercambio es aceptable si la capacidad lo permite.</li>
 <li><b>Minimización frente a equidad.</b> Quitar <code>age_band</code> reduce datos sensibles, pero con umbral 0.4 baja el recall de G1 a 0.735. La tensión queda explícita y se decidirá con los datos del piloto.</li>
@@ -115,6 +119,7 @@ uv run python scripts/lab12_audit.py --model tree
 uv run python scripts/lab12_compare.py             # baseline + IC95 + soporte interseccional
 uv run python scripts/lab12_mitigation.py          # mitigation.csv
 uv run python scripts/validate_lab12_decision.py   # decision_status: documented</pre>
+uv run --with matplotlib python scripts/make_figures.py   # figuras 1–4 (docs/entregables/figs)
 <p class="small">Entorno: Python 3.12.14, fairlearn 0.12.0, scikit-learn 1.9.1, Windows 11, semilla 42. Historial Git: <code>cd8fa55</code> init → <code>7abf7c6</code> fix scripts base → <code>3c31f14</code> LAB11 → <code>4c36607</code> LAB12 → <code>f3045de</code> LAB13 (tag <code>u04-lab13</code>), más los commits de mitigación y documentación.</p>
 <p><b>Hallazgo técnico:</b> <code>scripts/lab11_impact.py</code> y <code>simulate_incident.py</code> del proyecto base tenían strings sin cerrar (<code>SyntaxError</code>). Se corrigieron en un commit separado. Además, <code>DECISION_RECORD.md</code> se sobrescribía en cada ejecución; ahora solo se crea si no existe.</p>
 <p><b>Referencias.</b> NIST (2023). <i>AI Risk Management Framework (AI RMF 1.0)</i>. DOI 10.6028/NIST.AI.100-1. · OECD (2019). <i>Recommendation of the Council on Artificial Intelligence</i>. DOI 10.1787/cc2e1d3e-en. · Fairlearn Contributors. <i>Performing a Fairness Assessment</i>, documentación oficial. · República Dominicana. Ley 172-13 sobre protección integral de datos personales (2013).</p>

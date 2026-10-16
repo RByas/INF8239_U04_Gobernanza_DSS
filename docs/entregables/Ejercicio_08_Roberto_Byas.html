@@ -98,6 +98,8 @@ Repositorio: <b>https://github.com/RByas/INF8239_U04_Gobernanza_DSS</b> (tag <co
 uv run python -c "from inf8239_u04.data import load_data; from inf8239_u04.governance import load_config; from inf8239_u04.pipeline import run; print(run(load_data(),load_config()['gates'],kind='tree')['decision'])"
 → {'status': 'REVIEW', 'failed': ['recall_gap', 'fpr_gap'], ...}   # brecha recall 0.181, FPR 0.168</pre>
 <p>La puerta fallida produjo <code>REVIEW</code> y no se ocultó. Después se ejecutaron los pasos 1–6 y el rollback (<code>lab13_governance.py</code> restaura la logística).</p>
+<figure><img src="figs/e08_puertas.png" alt=""><figcaption><b>Figura 5.</b> Puertas de calidad de <code>configs/governance.yml</code>. La logística aprobada pasa las cinco (GO); el árbol del simulacro falla las brechas de recall (0.181) y FPR (0.168) y queda en REVIEW. Latencia y tamaño están muy por debajo del límite (escala logarítmica).</figcaption></figure>
+<figure><img src="figs/e08_monitoreo.png" alt=""><figcaption><b>Figura 6.</b> Monitoreo mensual sobre el periodo de prueba (septiembre se une a octubre por tener 6 casos). Por mes, la brecha de recall de la logística supera 0.16 en noviembre y diciembre, y el recall de G1 queda por debajo de 0.68 en los tres meses (0.63–0.67). G2 tiene solo 16–22 casos por mes (menos de 30), así que estas alertas indican revisar, no concluir; por eso el monitoreo debe exigir n mínimo e IC antes de escalar.</figcaption></figure>
 <p><b>Causa raíz encontrada:</b> las puertas recomiendan, pero no <i>bloquean</i> el despliegue, y no evalúan el recall por grupo. Por eso el GO de la logística oculta que el recall de G1 es 0.653.</p>
 <table>
 <tr><th>Acción correctiva</th><th>Responsable</th><th>Fecha</th></tr>
@@ -112,6 +114,7 @@ uv run python -c "from inf8239_u04.data import load_data; from inf8239_u04.gover
 <pre>uv sync --frozen
 uv run pytest -q                              # 10 passed: datos, privacidad, equidad, modelo, impacto, gobernanza, AppTest Streamlit
 uv run python scripts/lab13_governance.py     # valida RACI + puertas → deployment_decision.json
+uv run --with matplotlib python scripts/make_figures.py   # figuras 5 y 6 (docs/entregables/figs)
 uv run streamlit run app.py                   # tablero verificado en navegador
 uv export --format requirements-txt --no-dev -o requirements.txt</pre>
 <table>

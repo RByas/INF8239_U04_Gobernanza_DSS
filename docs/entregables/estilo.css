@@ -19,3 +19,6 @@ pre { font-family: Consolas, monospace; font-size: 8.4pt; background: #f4f4f4; p
 ul, ol { margin: 4px 0 6px 18px; padding: 0; }
 li { margin: 2px 0; }
 .small { font-size: 8.6pt; color: #444; }
+figure { margin: 8px 0 10px; break-inside: avoid; }
+figure img { width: 100%; display: block; }
+figcaption { font-size: 8.6pt; color: #333; margin-top: 3px; }
