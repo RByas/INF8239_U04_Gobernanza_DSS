@@ -1,0 +1,26 @@
+function,subcategory,requirement,control,evidence,status,risk_ids
+GOVERN,GOVERN 1.1,Obligaciones legales identificadas y documentadas,"Análisis de la Constitución (arts. 39, 44 y 70), la Ley 172-13 y la Ley 200-04, separado de marcos voluntarios y ética",docs/MARCO_NORMATIVO.md,documentado,R04;R05
+GOVERN,GOVERN 1.5,Monitoreo y revisión periódica planificados,Recalibración y reauditoría periódica por deriva temporal,reports/lab12/AUDIT_REPORT.md;student_inputs/lab11_impact.yml,pendiente LAB13,R07
+GOVERN,GOVERN 1.7,Retiro seguro del sistema,Condición de retiro hacia la alternativa FIFO,student_inputs/lab11_impact.yml;reports/lab11/DECISION_RECORD.md,documentado,R01;R02;R07
+GOVERN,GOVERN 2.1,Roles y responsabilidades documentados,Matriz RACI con R y A obligatorios validada por código,student_inputs/raci.csv;src/inf8239_u04/governance.py;tests/test_governance.py,verificado,R01;R02;R03;R04;R05;R06;R07;R08
+GOVERN,GOVERN 3.2,Roles de supervisión humana definidos,El operador decide; el sistema solo ordena la cola,student_inputs/lab11_impact.yml;app.py,documentado,R04;R06
+GOVERN,GOVERN 5.1,Retroalimentación externa sobre impactos,Participación por actor con consulta a representantes de afectados,student_inputs/stakeholders.csv,documentado,R08
+MAP,MAP 1.1,"Propósito, contexto, leyes y limitaciones documentados",Ficha de impacto con propósito y usos fuera de alcance más marco normativo,student_inputs/lab11_impact.yml;docs/MARCO_NORMATIVO.md;docs/DATASET_CARD.md,documentado,R04
+MAP,MAP 1.5,Tolerancias de riesgo determinadas,Compuertas de recall mínimo y brechas máximas aplicadas por el pipeline,configs/governance.yml;src/inf8239_u04/governance.py;tests/test_governance.py,verificado,R01;R02
+MAP,MAP 3.2,Costos de errores examinados,Escenarios de daño por falsos negativos y falsos positivos y carga de revisión de cada mitigación,student_inputs/risk_register.csv;reports/lab12/mitigation/threshold_strategies.csv,verificado,R01;R02;R06
+MAP,MAP 3.5,Procesos de supervisión humana definidos,Revisión humana total y apelación sin puntuación,student_inputs/lab11_impact.yml,documentado,R06;R08
+MAP,MAP 5.1,Probabilidad y magnitud de impactos identificadas,Registro de riesgos con prioridad = probabilidad × impacto calculada por script,reports/lab11/risk_register_scored.csv;src/inf8239_u04/impact.py;tests/test_impact.py,verificado,R01;R02;R03;R04;R05;R06;R07;R08
+MEASURE,MEASURE 1.1,Métricas seleccionadas para los riesgos principales,Recall por grupo como métrica principal y brecha de FPR como secundaria,student_inputs/lab12_decision.yml,documentado,R01;R02
+MEASURE,MEASURE 2.3,Desempeño medido en condiciones similares al uso,Partición temporal: entrenar con el pasado y evaluar con casos posteriores,src/inf8239_u04/data.py;scripts/describe_dataset.py,verificado,R07
+MEASURE,MEASURE 2.4,Monitoreo en producción,Monitoreo mensual de recall y brechas,docs/RUNBOOK.md,pendiente LAB13,R07
+MEASURE,MEASURE 2.10,Riesgos de privacidad examinados,Rechazo de identificadores directos en el esquema,src/inf8239_u04/data.py;tests/test_privacy.py;tests/test_data.py,verificado,R05
+MEASURE,MEASURE 2.11,Equidad y sesgo evaluados y documentados,Métricas por grupo e interseccionales con conteos e intervalos bootstrap,reports/lab12/logistic/fairness_by_group.csv;reports/lab12/logistic/fairness_intersectional.csv;reports/lab12/logistic/bootstrap_ci.csv;tests/test_fairness.py,verificado,R01;R02;R03
+MEASURE,MEASURE 2.12,Impacto ambiental evaluado,Tiempo de entrenamiento y tamaño serializado comparados entre modelos (Green AI),reports/lab12/logistic/global_metrics.json;reports/lab12/tree/global_metrics.json;reports/lab12/AUDIT_REPORT.md,verificado,
+MEASURE,MEASURE 3.3,Canales de reporte y apelación,Mecanismo de apelación con respuesta en 10 días hábiles,student_inputs/lab11_impact.yml,documentado,R08
+MANAGE,MANAGE 1.1,Decidir si continuar el desarrollo o despliegue,Decisión LIMITAR con condiciones previas al despliegue,reports/lab12/AUDIT_REPORT.md;reports/lab11/DECISION_RECORD.md,documentado,R01;R02;R07
+MANAGE,MANAGE 1.3,Respuesta a los riesgos de mayor prioridad,Experimento de mitigación por umbral con cinco estrategias,scripts/lab12_mitigation.py;reports/lab12/mitigation/threshold_strategies.csv,verificado,R01;R02
+MANAGE,MANAGE 1.4,Riesgo residual documentado,Columna de riesgo residual por riesgo,student_inputs/risk_register.csv,documentado,R01;R02;R03;R04;R05;R06;R07;R08
+MANAGE,MANAGE 2.1,Alternativas no basadas en IA consideradas,Cola FIFO con reglas públicas de umbral como línea base segura,student_inputs/lab11_impact.yml,documentado,R01;R07
+MANAGE,MANAGE 2.4,Mecanismos para desactivar el sistema,Compuertas que devuelven REVIEW y condición de retiro,src/inf8239_u04/governance.py;configs/governance.yml;tests/test_governance.py,verificado,R01;R02;R07
+MANAGE,MANAGE 4.1,Plan de monitoreo posdespliegue con apelación e incidentes,Runbook de incidentes y simulación,docs/RUNBOOK.md;scripts/simulate_incident.py,pendiente LAB13,R07;R08
+MANAGE,MANAGE 4.3,Comunicación de incidentes a afectados,Comunicación interna y a afectados en el runbook,docs/RUNBOOK.md,pendiente LAB13,R08

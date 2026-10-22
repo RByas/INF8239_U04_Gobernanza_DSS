@@ -2,6 +2,8 @@
 
 **Sistema:** Territorial Review DSS (sintético) · **Propietario (A):** Product Owner institucional · **Fecha:** 2026-10-15
 
+> **Nota de versión.** La evaluación de impacto (propósito, interesados, riesgos, alternativa, apelación y condición de retiro) se definió antes de entrenar el modelo. Las cifras de recall y FPR citadas abajo se incorporaron después, con la evidencia de la auditoría de LAB12 (`reports/lab12/`), para actualizar la interpretación de los riesgos. Los controles de R06 y R07 que dependen del runbook y del monitoreo quedan **pendientes de LAB13**.
+
 ## Decisión
 **REVISAR (REVIEW).** Se puede continuar con la auditoría de equidad (LAB12) y con un piloto limitado, siempre con revisión humana de todos los casos. **No** se autoriza ningún despliegue con acciones automáticas.
 

@@ -1,0 +1,22 @@
+{
+  "min_recall": 0.68,
+  "grid": [
+    0.2,
+    0.7,
+    0.01
+  ],
+  "selection_split": {
+    "fit": 360,
+    "validation": 120
+  },
+  "test": 160,
+  "bootstrap_reps": 2000,
+  "seed": 42,
+  "t_global": 0.63,
+  "margin": 0.133,
+  "t_margin": 0.3,
+  "t_group": {
+    "G1": 0.63,
+    "G2": 0.69
+  }
+}

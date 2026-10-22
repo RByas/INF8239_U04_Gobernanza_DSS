@@ -1,6 +1,54 @@
 {
-  "GOVERN": "owner and policy",
-  "MAP": "8 documented risks",
-  "MEASURE": "LAB12 pending",
-  "MANAGE": "withdrawal and appeal documented"
+  "GOVERN": {
+    "subcategories": [
+      "GOVERN 1.1",
+      "GOVERN 1.5",
+      "GOVERN 1.7",
+      "GOVERN 2.1",
+      "GOVERN 3.2",
+      "GOVERN 5.1"
+    ],
+    "documentado": 4,
+    "pendiente LAB13": 1,
+    "verificado": 1
+  },
+  "MAP": {
+    "subcategories": [
+      "MAP 1.1",
+      "MAP 1.5",
+      "MAP 3.2",
+      "MAP 3.5",
+      "MAP 5.1"
+    ],
+    "verificado": 3,
+    "documentado": 2
+  },
+  "MEASURE": {
+    "subcategories": [
+      "MEASURE 1.1",
+      "MEASURE 2.3",
+      "MEASURE 2.4",
+      "MEASURE 2.10",
+      "MEASURE 2.11",
+      "MEASURE 2.12",
+      "MEASURE 3.3"
+    ],
+    "verificado": 4,
+    "documentado": 2,
+    "pendiente LAB13": 1
+  },
+  "MANAGE": {
+    "subcategories": [
+      "MANAGE 1.1",
+      "MANAGE 1.3",
+      "MANAGE 1.4",
+      "MANAGE 2.1",
+      "MANAGE 2.4",
+      "MANAGE 4.1",
+      "MANAGE 4.3"
+    ],
+    "documentado": 3,
+    "verificado": 2,
+    "pendiente LAB13": 2
+  }
 }

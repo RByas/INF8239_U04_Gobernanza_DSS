@@ -1,0 +1,6 @@
+{
+  "reps": 2000,
+  "seed": 42,
+  "method": "percentile, stratified by protected_group",
+  "n_test": 160
+}
