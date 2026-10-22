@@ -9,8 +9,7 @@
       "GOVERN 5.1"
     ],
     "documentado": 4,
-    "pendiente LAB13": 1,
-    "verificado": 1
+    "verificado": 2
   },
   "MAP": {
     "subcategories": [
@@ -33,9 +32,8 @@
       "MEASURE 2.12",
       "MEASURE 3.3"
     ],
-    "verificado": 4,
-    "documentado": 2,
-    "pendiente LAB13": 1
+    "verificado": 5,
+    "documentado": 2
   },
   "MANAGE": {
     "subcategories": [
@@ -47,8 +45,7 @@
       "MANAGE 4.1",
       "MANAGE 4.3"
     ],
-    "documentado": 3,
-    "verificado": 2,
-    "pendiente LAB13": 2
+    "documentado": 4,
+    "verificado": 3
   }
 }

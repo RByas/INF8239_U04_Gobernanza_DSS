@@ -1,5 +1,13 @@
 activity,R,A,C,I
 Data quality,Data Engineer,Product Owner,Data Scientist,Affected representatives
+Data minimization and retention,Data Engineer,Institutional Owner,Legal,Data Scientist
+Impact assessment (LAB11),Data Scientist,Product Owner,Affected representatives; Legal,Institutional Owner
+Fairness audit (LAB12),Data Scientist,Product Owner,Affected representatives,Operators
 Model validation,Data Scientist,Product Owner,Data Engineer,Affected representatives
 Deployment,ML Engineer,Product Owner,Data Scientist,Users
-Incident response,ML Engineer,Institutional Owner,Legal and Data Scientist,Affected representatives
+Monitoring and drift,ML Engineer,Product Owner,Data Scientist,Institutional Owner
+Case review and override,Operator,Supervisor,Data Scientist,Affected person
+Appeals,Supervisor,Institutional Owner,Legal,Affected person
+Incident response,ML Engineer,Institutional Owner,Legal; Data Scientist,Affected representatives
+Rollback to baseline,ML Engineer,Institutional Owner,Product Owner,Operators; Users
+External communication,Product Owner,Institutional Owner,Legal,Affected representatives

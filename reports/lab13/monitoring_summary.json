@@ -1,0 +1,27 @@
+{
+  "trace": {
+    "package_version": "0.1.0",
+    "git_commit": "224a1d7",
+    "model": "logistic",
+    "policy": "configs/governance.yml",
+    "policy_sha256": "67b502bf3bf5",
+    "evidence": [
+      "reports/lab13/monitoring_monthly.csv"
+    ],
+    "generated_at": "2026-10-22T16:59:44+00:00"
+  },
+  "periods": 4,
+  "status_by_period": {
+    "2026-09": "LOW_SUPPORT",
+    "2026-10": "ALERT",
+    "2026-11": "ALERT",
+    "2026-12": "ALERT"
+  },
+  "alerts_by_period": {
+    "2026-09": "recall_gap",
+    "2026-10": "group_recall:G1",
+    "2026-11": "group_recall:G1;recall_gap",
+    "2026-12": "group_recall:G1;recall_gap;fpr_gap"
+  },
+  "action": "Any ALERT opens an incident per docs/RUNBOOK.md; LOW_SUPPORT periods are reviewed, not concluded"
+}

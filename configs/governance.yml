@@ -5,9 +5,13 @@ prohibited_uses:
   - eligibility decision
   - emergency declaration
 sensitive_features: [protected_group, age_band]
+# Atributos que nunca entran al modelo (puerta de privacidad); age_band se audita y su uso como predictor está en revisión (Model Card)
+excluded_from_model: [protected_group]
 direct_identifiers: [name, document_number, email, phone]
 gates:
   min_recall: 0.68
+  min_group_recall: 0.68
+  min_group_size: 30
   max_recall_gap: 0.16
   max_fpr_gap: 0.16
   max_latency_ms: 500

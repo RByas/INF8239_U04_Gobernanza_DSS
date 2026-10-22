@@ -1,0 +1,49 @@
+{
+  "id": "INC-2026-001 (simulacro)",
+  "detected_at": "2026-10-22T16:51:28+00:00",
+  "scenario": "tree model deployed instead of the reviewed logistic model",
+  "signal": {
+    "status": "REVIEW",
+    "failed": [
+      "recall_gap",
+      "fpr_gap",
+      "group_recall"
+    ],
+    "gaps": {
+      "recall_gap": 0.1813004271476032,
+      "fpr_gap": 0.16826923076923078
+    },
+    "group_recall": {
+      "G1": {
+        "recall": 0.6326530612244898,
+        "n": 101
+      },
+      "G2": {
+        "recall": 0.813953488372093,
+        "n": 59
+      }
+    }
+  },
+  "containment": "Institutional Owner suspends the ranking; queue falls back to FIFO with public rules (docs/RUNBOOK.md step 5)",
+  "evidence": {
+    "package_version": "0.1.0",
+    "git_commit": "224a1d7",
+    "model": "tree",
+    "policy": "configs/governance.yml",
+    "policy_sha256": "67b502bf3bf5",
+    "evidence": [
+      "reports/lab13/incident_drill.json",
+      "reports/lab13/deployment_decision.json",
+      "reports/lab12/tree/global_metrics.json"
+    ],
+    "generated_at": "2026-10-22T16:51:28+00:00"
+  },
+  "rollback_check": {
+    "model": "logistic",
+    "status": "REVIEW",
+    "failed": [
+      "group_recall"
+    ],
+    "note": "The reviewed model is not GO either (group_recall), so rollback goes to the FIFO baseline, not back to the logistic model"
+  }
+}

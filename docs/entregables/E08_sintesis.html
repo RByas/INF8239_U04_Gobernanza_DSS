@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>U04.E08 · Expediente de gobernanza y simulacro · Roberto Byas</title>
+<style>
+  @page { size: Letter; margin: 1in 1in 1in 1in; }
+  html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { margin: 0; color: #000; font: 12pt/1.25 "Times New Roman", Times, serif; }
+  p { margin: 0 0 8pt; text-align: justify; }
+  h2, h3 { font: bold 12pt/1.25 "Times New Roman", Times, serif; margin: 14pt 0 6pt; break-after: avoid; }
+  h3 { margin-top: 10pt; }
+  ul, ol { margin: 0 0 8pt; padding-left: 26pt; }
+  li { margin-bottom: 3pt; text-align: justify; }
+  a { color: #0563c1; text-decoration: underline; }
+  code, pre { font-family: "Courier New", Courier, monospace; font-size: 10pt; }
+  pre { margin: 0 0 10pt 18pt; line-height: 1.3; break-inside: avoid; }
+  table { width: 100%; border-collapse: collapse; margin: 2pt 0 10pt; font-size: 10.5pt; line-height: 1.2; }
+  thead { display: table-header-group; }
+  tr { break-inside: avoid; }
+  th, td { border: 0.75pt solid #000; padding: 2pt 4pt; vertical-align: top; text-align: left; }
+  th { font-weight: bold; text-align: center; }
+  td.n, th.n { text-align: right; white-space: nowrap; }
+  td.b { font-weight: bold; }
+  .caption { font-size: 10.5pt; font-style: italic; text-align: left; margin: -6pt 0 10pt; }
+  .center { text-align: center; }
+  .page { break-after: page; }
+
+  /* Portada */
+  .cover { text-align: center; font-family: Arial, Helvetica, sans-serif; padding-top: 6pt; }
+  .cover img { width: 150pt; margin-bottom: 18pt; }
+  .cover .u1 { font: bold 22pt/1.15 Arial, sans-serif; }
+  .cover .u2 { font: 14pt/1.2 Arial, sans-serif; margin-top: 2pt; }
+  .cover .t1 { font: bold 20pt/1.15 Arial, sans-serif; margin-top: 22pt; }
+  .cover .lbl { font: bold 14pt Arial, sans-serif; margin-top: 18pt; }
+  .cover .val { font: 14pt/1.2 Arial, sans-serif; }
+  .cover .place { font: 14pt/1.2 Arial, sans-serif; margin-top: 22pt; }
+
+  /* Tabla de contenido */
+  .toc h1 { font: 16pt "Aptos Display", "Calibri Light", Calibri, sans-serif; color: #0f4761; margin: 0 0 8pt; }
+  .toc .e { display: flex; align-items: baseline; font: bold 11pt "Times New Roman", serif; margin: 0 0 7pt; }
+  .toc .e.l2 { padding-left: 18pt; font-size: 10.5pt; }
+  .toc .e .d { flex: 1; border-bottom: 1.2pt dotted #000; margin: 0 3pt; transform: translateY(-3pt); }
+
+  .figure { margin: 4pt 0 2pt; break-inside: avoid; }
+  .figure svg { width: 100%; height: auto; display: block; }
+</style>
+</head>
+<body>
+
+<!-- Portada -->
+<section class="cover page">
+  <img src="img/logo_fc.png" alt="Facultad de Ciencias, UASD">
+  <div class="u1">Universidad Autónoma de Santo Domingo<br>UASD</div>
+  <div class="u2">Facultad de Ciencias - Escuela de Informática.</div>
+  <div class="t1">Ejercicio 08. Expediente de<br>gobernanza y simulacro.</div>
+  <div class="u2" style="font-family:'Times New Roman',serif">Integración de U04.LAB13 · Gobernanza y DSS responsable con Streamlit.<br>Unidad 04 · Ética y roles en Ciencia de Datos.</div>
+  <div class="lbl">Presentado por:</div>
+  <div class="val">Roberto Byas.<br>77-1015.</div>
+  <div class="lbl">Catedrático:</div>
+  <div class="val">Edwin Ramón José Nolasco.</div>
+  <div class="lbl">Asignatura:</div>
+  <div class="val">INF-8239 Ciencia de Datos II.</div>
+  <div class="place">Santo Domingo de Guzmán, D.N.<br>Octubre de 2026.</div>
+</section>
+
+<!-- Tabla de contenido: el número de página lo completa scripts/pdf_tools.py -->
+<section class="toc page">
+  <h1>Tabla de contenido</h1>
+  <div class="e"><span>Resumen ejecutivo y decisión final.</span><span class="d"></span><span data-toc="Resumen ejecutivo y decisión final.">0</span></div>
+  <div class="e"><span>1.- Inventario, minimización y retención.</span><span class="d"></span><span data-toc="1.- Inventario, minimización y retención.">0</span></div>
+  <div class="e"><span>2.- Datasheet y Model Card trazables.</span><span class="d"></span><span data-toc="2.- Datasheet y Model Card trazables.">0</span></div>
+  <div class="e"><span>3.- RACI y traspaso entre roles.</span><span class="d"></span><span data-toc="3.- RACI y traspaso entre roles.">0</span></div>
+  <div class="e"><span>4.- Monitoreo, runbook y simulacro.</span><span class="d"></span><span data-toc="4.- Monitoreo, runbook y simulacro.">0</span></div>
+  <div class="e l2"><span>4.1. Puertas de calidad y recomendación gobernada.</span><span class="d"></span><span data-toc="4.1. Puertas de calidad y recomendación gobernada.">0</span></div>
+  <div class="e l2"><span>4.2. Monitoreo mensual.</span><span class="d"></span><span data-toc="4.2. Monitoreo mensual.">0</span></div>
+  <div class="e l2"><span>4.3. Runbook de incidentes.</span><span class="d"></span><span data-toc="4.3. Runbook de incidentes.">0</span></div>
+  <div class="e l2"><span>4.4. Simulacro y postmortem.</span><span class="d"></span><span data-toc="4.4. Simulacro y postmortem.">0</span></div>
+  <div class="e"><span>5.- Obligación legal, marco voluntario y recomendación ética.</span><span class="d"></span><span data-toc="5.- Obligación legal, marco voluntario y recomendación ética.">0</span></div>
+  <div class="e"><span>6.- Pruebas, Git y calidad documental.</span><span class="d"></span><span data-toc="6.- Pruebas, Git y calidad documental.">0</span></div>
+  <div class="e"><span>7.- Declaración de uso de IA.</span><span class="d"></span><span data-toc="7.- Declaración de uso de IA.">0</span></div>
+  <div class="e"><span>Referencias.</span><span class="d"></span><span data-toc="Referencias.">0</span></div>
+</section>
+
+<p><b>Descripción.</b></p>
+<p>Este expediente integra individualmente las evidencias de LAB13 para aplicarlas al trabajo final. Abarca el inventario y la minimización de datos, la Datasheet y la Model Card, la matriz RACI y los traspasos entre roles, el monitoreo, el runbook y el simulacro de incidente, y las pruebas. Además, distingue obligación legal, marco voluntario y recomendación ética.</p>
+
+<p><b>Enlace al repositorio.</b><br>
+<a href="https://github.com/RByas/INF8239_U04_Gobernanza_DSS/tree/master">https://github.com/RByas/INF8239_U04_Gobernanza_DSS/tree/master</a> (rama <code>master</code>). El cierre de LAB13 se marca con la etiqueta <a href="https://github.com/RByas/INF8239_U04_Gobernanza_DSS/tree/u04-lab13-master">u04-lab13-master</a>. Todas las rutas citadas son relativas a la raíz del repositorio. Los datos son sintéticos y no representan personas, territorios ni tasas reales.</p>
+
+<p class="center" style="margin-top:12pt"><b>Informe.</b><br><b>Territorial Review DSS: gobernanza, monitoreo y respuesta a incidentes.</b></p>
+
+<h2>Resumen ejecutivo y decisión final.</h2>
+<p><b>Decisión: LIMITAR.</b> El DSS solo puede ordenar la cola de revisión, con supervisión humana de todos los casos. No declara emergencias, culpabilidad ni elegibilidad, ni decide intervenciones. La recomendación gobernada que produce el pipeline es <b>REVIEW</b>, coherente con esta decisión.</p>
+<table style="width:85%">
+  <thead><tr><th>Evidencia</th><th>Resultado</th></tr></thead>
+  <tbody>
+    <tr><td class="b">Recomendación del pipeline (<code>deployment_decision.json</code>)</td><td>REVIEW: falla <code>group_recall</code></td></tr>
+    <tr><td class="b">Recall de G1 frente al mínimo por grupo</td><td>0.653 &lt; 0.68</td></tr>
+    <tr><td class="b">Meses en ALERT en el monitoreo</td><td>3 de 3 meses con soporte (octubre a diciembre)</td></tr>
+    <tr><td class="b">Simulacro: árbol desplegado por error</td><td>REVIEW con 3 puertas fallidas; rollback a FIFO</td></tr>
+    <tr><td class="b">Pruebas automatizadas</td><td>20 de 20 en verde</td></tr>
+  </tbody>
+</table>
+<p>El modelo no se despliega hasta que se cumplan cuatro condiciones:</p>
+<ol>
+  <li>El Product Owner elige una mitigación (B2 o D, Ejercicio 07).</li>
+  <li>Una nueva auditoría devuelve GO.</li>
+  <li>Se resuelve el uso de <code>age_band</code>.</li>
+  <li>El despliegue queda bloqueado mientras falte la firma del Product Owner.</li>
+</ol>
+<p>Mientras tanto, la cola funciona con la alternativa no predictiva: orden de llegada (FIFO) con reglas públicas.</p>
+
+<h2>1.- Inventario, minimización y retención.</h2>
+<p>El dataset tiene 640 casos sintéticos y 9 columnas, del 2026-01-01 al 2026-12-27. Solo 5 columnas entran al modelo. El atributo protegido se usa únicamente para auditar, y una puerta de privacidad lo garantiza.</p>
+<table>
+  <thead><tr><th>Columna</th><th>Rol</th><th>¿Entra al modelo?</th><th>Minimización y justificación</th></tr></thead>
+  <tbody>
+    <tr><td><code>case_id</code></td><td>Identificador técnico (seudónimo)</td><td>No</td><td>Solo para trazabilidad; no identifica personas</td></tr>
+    <tr><td><code>received_date</code></td><td>Orden temporal</td><td>No</td><td>Solo para el corte temporal</td></tr>
+    <tr><td><code>zone</code></td><td>Contexto territorial</td><td>Sí</td><td>Granularidad gruesa (4 zonas), sin direcciones</td></tr>
+    <tr><td><code>protected_group</code></td><td>Sensible</td><td><b>No</b></td><td>Solo para auditar. La puerta <code>privacy</code> devuelve STOP si entra al modelo</td></tr>
+    <tr><td><code>age_band</code></td><td>Sensible</td><td>Sí (en revisión)</td><td>Franjas en lugar de la edad exacta; su uso está pendiente de decisión del Product Owner</td></tr>
+    <tr><td><code>previous_incidents</code></td><td>Predictor</td><td>Sí</td><td>Historial agregado</td></tr>
+    <tr><td><code>infrastructure_score</code></td><td>Predictor</td><td>Sí</td><td>Posible <i>proxy</i> de grupo (0.417 en G2 frente a 0.575 en G1)</td></tr>
+    <tr><td><code>exposure</code></td><td>Predictor</td><td>Sí</td><td>Posible <i>proxy</i> de grupo (0.544 en G2 frente a 0.502 en G1)</td></tr>
+    <tr><td><code>target</code></td><td>Etiqueta</td><td>No</td><td>Refleja incidentes registrados, no daño real</td></tr>
+  </tbody>
+</table>
+<p class="caption">Fuente: <code>docs/DATASET_CARD.md</code>. Las columnas <code>name</code>, <code>document_number</code>, <code>email</code> y <code>phone</code> están prohibidas: <code>validate_schema</code> las rechaza antes de predecir, y lo comprueban <code>tests/test_data.py</code> y <code>tests/test_privacy.py</code>.</p>
+<table>
+  <thead><tr><th>Artefacto</th><th>Retención</th><th>Acceso</th><th>Eliminación</th></tr></thead>
+  <tbody>
+    <tr><td class="b">Datos de casos</td><td>Ciclo de revisión + 12 meses</td><td>Data Engineer y Data Scientist</td><td>Borrado seguro programado, con registro</td></tr>
+    <tr><td class="b">Predicciones y logs de decisión</td><td>24 meses (para atender apelaciones e incidentes)</td><td>Supervisor, ML Engineer y Legal</td><td>Agregación anónima al vencer</td></tr>
+    <tr><td class="b">Reportes de auditoría</td><td>Vida del sistema + 5 años</td><td>Equipo y responsables</td><td>Archivo institucional</td></tr>
+    <tr><td class="b">Modelos serializados</td><td>Versión vigente + 2 anteriores (para rollback)</td><td>ML Engineer</td><td>Se eliminan las versiones sin uso</td></tr>
+  </tbody>
+</table>
+<p>Los plazos son una propuesta académica. Responden a dos necesidades concretas: conservar los logs el tiempo suficiente para atender apelaciones, y conservar dos versiones previas del modelo para poder hacer rollback. En un despliegue real se ajustarían a la Ley 172-13 (sección 5).</p>
+
+<h2>2.- Datasheet y Model Card trazables.</h2>
+<p>La Datasheet sigue la estructura de Gebru et al. (2021) y la Model Card la de Mitchell et al. (2019). Cada afirmación remite a un archivo que se puede regenerar.</p>
+<table>
+  <thead><tr><th style="width:30%">Sección</th><th>Contenido</th><th style="width:34%">Evidencia</th></tr></thead>
+  <tbody>
+    <tr><td class="b">Datasheet: composición</td><td>640 casos; prevalencia de 0.552 (0.497 en G1 y 0.639 en G2)</td><td><code>docs/DATASET_CARD.md</code>, <code>data/</code></td></tr>
+    <tr><td class="b">Datasheet: inventario y retención</td><td>Rol de cada columna, minimización y plazos</td><td><code>docs/DATASET_CARD.md</code></td></tr>
+    <tr><td class="b">Model Card: uso previsto y fuera de alcance</td><td>Ordenar la cola para revisión humana; usos prohibidos</td><td><code>configs/governance.yml</code></td></tr>
+    <tr><td class="b">Model Card: datos y partición</td><td>480 casos de entrenamiento y 160 de prueba, con corte temporal en 2026-09-24</td><td><code>src/inf8239_u04/data.py</code></td></tr>
+    <tr><td class="b">Model Card: evaluación por grupo</td><td>Recall de 0.653 en G1 y 0.791 en G2; IC 95 % de la brecha de 0.010–0.318</td><td><code>reports/lab12/</code>, <code>reports/lab13/fairness_by_group.csv</code></td></tr>
+    <tr><td class="b">Model Card: Green AI</td><td>3.6 KB; entrenamiento de 0.10–0.35 s; ≈ 0.05 ms por caso</td><td><code>reports/lab13/deployment_decision.json</code></td></tr>
+    <tr><td class="b">Model Card: límites y decisión</td><td><i>Proxies</i>, deriva temporal, <code>age_band</code>; LIMITAR</td><td><code>docs/MODEL_CARD.md</code>, <code>AUDIT_REPORT.md</code></td></tr>
+  </tbody>
+</table>
+<p><b>Trazabilidad de cada recomendación.</b> <code>lab13_governance.py</code> agrega a <code>deployment_decision.json</code> un bloque <code>trace</code> con:</p>
+<ul>
+  <li>la versión del paquete (0.1.0);</li>
+  <li>el commit de Git;</li>
+  <li>el modelo (<code>logistic</code>);</li>
+  <li>la política (<code>configs/governance.yml</code>) y su huella SHA-256 (<code>67b502bf3bf5</code>);</li>
+  <li>la lista de evidencia;</li>
+  <li>la fecha de generación.</li>
+</ul>
+<p>El tablero de Streamlit muestra el mismo bloque. Así, cualquier recomendación puede reconstruirse con la política y el código exactos que la produjeron.</p>
+
+<h2>3.- RACI y traspaso entre roles.</h2>
+<p>La matriz cubre 12 actividades. <code>validate_raci</code> exige que cada una tenga exactamente un Accountable y al menos un Responsible, y rechaza las actividades duplicadas. Una prueba automática lo comprueba sobre el archivo real.</p>
+<table>
+  <thead><tr><th>Actividad</th><th>R</th><th>A</th><th>C</th><th>I</th></tr></thead>
+  <tbody>
+    <tr><td class="b">Calidad de datos</td><td>Data Engineer</td><td>Product Owner</td><td>Data Scientist</td><td>Representantes de afectados</td></tr>
+    <tr><td class="b">Minimización y retención</td><td>Data Engineer</td><td>Institutional Owner</td><td>Legal</td><td>Data Scientist</td></tr>
+    <tr><td class="b">Evaluación de impacto (LAB11)</td><td>Data Scientist</td><td>Product Owner</td><td>Afectados; Legal</td><td>Institutional Owner</td></tr>
+    <tr><td class="b">Auditoría de equidad (LAB12)</td><td>Data Scientist</td><td>Product Owner</td><td>Afectados</td><td>Operadores</td></tr>
+    <tr><td class="b">Validación del modelo</td><td>Data Scientist</td><td>Product Owner</td><td>Data Engineer</td><td>Afectados</td></tr>
+    <tr><td class="b">Despliegue</td><td>ML Engineer</td><td>Product Owner</td><td>Data Scientist</td><td>Usuarios</td></tr>
+    <tr><td class="b">Monitoreo y deriva</td><td>ML Engineer</td><td>Product Owner</td><td>Data Scientist</td><td>Institutional Owner</td></tr>
+    <tr><td class="b">Revisión de casos y anulación</td><td>Operador</td><td>Supervisor</td><td>Data Scientist</td><td>Persona afectada</td></tr>
+    <tr><td class="b">Apelaciones</td><td>Supervisor</td><td>Institutional Owner</td><td>Legal</td><td>Persona afectada</td></tr>
+    <tr><td class="b">Respuesta a incidentes</td><td>ML Engineer</td><td>Institutional Owner</td><td>Legal; Data Scientist</td><td>Afectados</td></tr>
+    <tr><td class="b">Rollback a la alternativa segura</td><td>ML Engineer</td><td>Institutional Owner</td><td>Product Owner</td><td>Operadores; Usuarios</td></tr>
+    <tr><td class="b">Comunicación externa</td><td>Product Owner</td><td>Institutional Owner</td><td>Legal</td><td>Afectados</td></tr>
+  </tbody>
+</table>
+<p class="caption">Fuente: <code>student_inputs/raci.csv</code>. Validación: <code>validate_raci</code> en <code>src/inf8239_u04/governance.py</code> y <code>tests/test_governance.py</code>.</p>
+<p>Cada traspaso tiene un criterio de aceptación verificable (<code>docs/HANDOFF.md</code>). Quien recibe puede rechazar la entrega, y la responsabilidad no se transfiere hasta que acepta.</p>
+<table>
+  <thead><tr><th>#</th><th>De → A</th><th>Criterio de aceptación</th><th>Si falla</th></tr></thead>
+  <tbody>
+    <tr><td class="n">1</td><td>Data Engineer → Data Scientist</td><td>Pruebas de datos y privacidad en verde; <code>dataset_status: valid</code></td><td>Se devuelve el lote</td></tr>
+    <tr><td class="n">2</td><td>Data Scientist → Product Owner</td><td>Scripts de LAB11 y LAB12 sin errores; auditoría con n, IC 95 % y mitigación</td><td>Estado REVIEW</td></tr>
+    <tr><td class="n">3</td><td>Product Owner → ML Engineer</td><td>Decisión firmada; <code>lab13_governance.py</code> con <code>trace</code> y sin puertas ocultas</td><td>No se despliega</td></tr>
+    <tr><td class="n">4</td><td>ML Engineer → Operadores</td><td><code>pytest</code> en verde (AppTest); tablero con límites, puerta fallida y acción humana</td><td>Se mantiene FIFO</td></tr>
+    <tr><td class="n">5</td><td>Operador → Supervisor</td><td>Registro de desacuerdos y apelaciones; respuesta en ≤ 10 días hábiles</td><td>Se escala al Institutional Owner</td></tr>
+    <tr><td class="n">6</td><td>ML Engineer → Institutional Owner</td><td>Alerta de monitoreo clasificada en &lt; 24 h; evidencia congelada</td><td>Contención a FIFO</td></tr>
+    <tr><td class="n">7</td><td>Data Scientist → Product Owner</td><td>Postmortem con acciones, responsables y fechas en ≤ 10 días hábiles</td><td>Incidente abierto</td></tr>
+  </tbody>
+</table>
+<p><b>Estado actual:</b> el traspaso 3 está <b>detenido</b>. La decisión es LIMITAR y la recomendación es REVIEW, así que el ML Engineer no recibe un modelo para desplegar.</p>
+
+<h2>4.- Monitoreo, runbook y simulacro.</h2>
+<h3>4.1. Puertas de calidad y recomendación gobernada.</h3>
+<table>
+  <thead><tr><th>Puerta</th><th>Umbral</th><th>Valor (modelo logístico)</th><th>Resultado</th></tr></thead>
+  <tbody>
+    <tr><td class="b">Recall global</td><td>≥ 0.68</td><td class="n">0.717</td><td>Cumple</td></tr>
+    <tr><td class="b">Recall por grupo (n ≥ 30)</td><td>≥ 0.68</td><td class="n">G1 0.653 · G2 0.791</td><td><b>Falla → REVIEW</b></td></tr>
+    <tr><td class="b">Brecha de recall</td><td>≤ 0.16</td><td class="n">0.138</td><td>Cumple</td></tr>
+    <tr><td class="b">Brecha de FPR</td><td>≤ 0.16</td><td class="n">0.125</td><td>Cumple</td></tr>
+    <tr><td class="b">Latencia por caso</td><td>≤ 500 ms</td><td class="n">≈ 0.05 ms</td><td>Cumple</td></tr>
+    <tr><td class="b">Tamaño del modelo</td><td>≤ 1024 KB</td><td class="n">3.6 KB</td><td>Cumple</td></tr>
+    <tr><td class="b">Privacidad (atributo protegido o identificador en el modelo)</td><td>Ninguno</td><td class="n">Ninguno</td><td>Cumple (si fallara: STOP)</td></tr>
+  </tbody>
+</table>
+<p class="caption">Fuente: <code>reports/lab13/deployment_decision.json</code>, generado por <code>scripts/lab13_governance.py</code> con la política <code>configs/governance.yml</code>.</p>
+<p>Antes de LAB13, las puertas solo miraban el recall global y las brechas, así que el pipeline recomendaba <b>GO</b>. Eso ocultaba que G1 no cumple el mínimo. La puerta <code>group_recall</code> corrige ese punto ciego, y una puerta fallida ya no puede ocultarse: produce REVIEW, o STOP si falla la privacidad.</p>
+
+<h3>4.2. Monitoreo mensual.</h3>
+<p><code>scripts/lab13_monitor.py</code> recalcula las mismas puertas para cada mes del periodo posterior al entrenamiento. Cada mes recibe uno de cuatro estados:</p>
+<ul>
+  <li><b>ALERT:</b> un grupo con n ≥ 30 baja del recall mínimo.</li>
+  <li><b>REVIEW:</b> solo se supera una brecha.</li>
+  <li><b>LOW_SUPPORT:</b> ningún grupo alcanza n ≥ 30, así que se revisa sin concluir.</li>
+  <li><b>OK:</b> no hay alertas.</li>
+</ul>
+<div class="figure"><!--CHART:monitoring--></div>
+<p class="caption">Figura 1. Recall mensual por grupo frente al mínimo de 0.68. Los puntos huecos indican grupos con n &lt; 30 en ese mes. Fuente: <code>reports/lab13/monitoring_monthly.csv</code>.</p>
+<table>
+  <thead><tr><th>Mes</th><th>n</th><th>n G1 / G2</th><th>Recall G1</th><th>Recall G2</th><th>Brecha recall</th><th>Brecha FPR</th><th>Estado</th></tr></thead>
+  <tbody>
+    <tr><td>2026-09</td><td class="n">6</td><td class="n">3 / 3</td><td class="n">1.000</td><td class="n">0.667</td><td class="n">0.333</td><td class="n">0.000</td><td>LOW_SUPPORT</td></tr>
+    <tr><td>2026-10</td><td class="n">54</td><td class="n">35 / 19</td><td class="n">0.643</td><td class="n">0.643</td><td class="n">0.000</td><td class="n">0.038</td><td><b>ALERT</b> (G1)</td></tr>
+    <tr><td>2026-11</td><td class="n">54</td><td class="n">33 / 21</td><td class="n">0.625</td><td class="n">0.800</td><td class="n">0.175</td><td class="n">0.039</td><td><b>ALERT</b> (G1, brecha)</td></tr>
+    <tr><td>2026-12</td><td class="n">46</td><td class="n">30 / 16</td><td class="n">0.667</td><td class="n">1.000</td><td class="n">0.333</td><td class="n">0.433</td><td><b>ALERT</b> (G1, brechas)</td></tr>
+  </tbody>
+</table>
+<p><b>Interpretación.</b> El recall de G1 queda por debajo de 0.68 en los tres meses con soporte suficiente. La falla es <b>persistente</b>, no un accidente de un solo corte, y respalda la decisión LIMITAR. G2 tiene entre 16 y 21 casos por mes, por debajo de 30. Por eso las brechas de noviembre y diciembre se tratan como señal de revisión y no como conclusión.</p>
+
+<h3>4.3. Runbook de incidentes.</h3>
+<table>
+  <thead><tr><th>Paso</th><th>Qué se hace</th><th>Responsable</th></tr></thead>
+  <tbody>
+    <tr><td class="b">1. Detección</td><td>La alerta llega de una ejecución de <code>lab13_monitor.py</code> o <code>lab13_governance.py</code> con estado ALERT, REVIEW o STOP, de un operador o de una apelación. Se clasifica por severidad en &lt; 24 h.</td><td>ML Engineer</td></tr>
+    <tr><td class="b">2. Contención</td><td>Si la severidad es crítica o alta, se suspende el ranking y se avisa en &lt; 4 h. La cola pasa a FIFO.</td><td>Institutional Owner (A)</td></tr>
+    <tr><td class="b">3. Evidencia</td><td>Se congelan el modelo, el bloque <code>trace</code>, los reportes de LAB12 y LAB13, el lote afectado y los logs.</td><td>ML Engineer</td></tr>
+    <tr><td class="b">4. Comunicación</td><td>Se avisa a operadores el mismo día. Las personas afectadas reciben una revisión prioritaria. Sus representantes reciben un resumen en ≤ 10 días hábiles. Legal revisa todo.</td><td>Product Owner (R)</td></tr>
+    <tr><td class="b">5. Rollback</td><td>La cola pasa a FIFO con reglas públicas. Solo se vuelve al modelo con una nueva auditoría, un GO y la firma del Product Owner.</td><td>ML Engineer (R), Institutional Owner (A)</td></tr>
+    <tr><td class="b">6. Postmortem</td><td>Postmortem sin culpables, en ≤ 10 días hábiles, con causa raíz y acciones fechadas.</td><td>Data Scientist (R), Product Owner (A)</td></tr>
+  </tbody>
+</table>
+<p class="caption">Fuente: <code>docs/RUNBOOK.md</code>.</p>
+
+<h3>4.4. Simulacro y postmortem.</h3>
+<p><b>Escenario:</b> tras una actualización, el árbol de decisión entra a producción en lugar del modelo logístico revisado. La señal no se declara: <code>scripts/simulate_incident.py</code> pasa ese modelo por las mismas puertas y registra el resultado en <code>reports/lab13/incident_drill.json</code>.</p>
+<ul>
+  <li><b>Detección:</b> la recomendación es REVIEW, con tres puertas fallidas: brecha de recall de 0.181, brecha de FPR de 0.168 y recall de G1 de 0.633.</li>
+  <li><b>Contención y evidencia:</b> se suspende el ranking, la cola pasa a FIFO y se congela el bloque <code>trace</code> del simulacro.</li>
+  <li><b>Rollback, hallazgo principal:</b> no se puede volver al modelo logístico, porque también da REVIEW (<code>group_recall</code>). El rollback debe ir a una alternativa que <b>sí</b> cumpla la política, la cola FIFO, y no al modelo anterior.</li>
+</ul>
+<table>
+  <thead><tr><th>Acción correctiva</th><th>Responsable</th><th>Fecha</th><th>Estado</th></tr></thead>
+  <tbody>
+    <tr><td>Puerta de recall mínimo por grupo</td><td>Data Scientist</td><td>2026-10-22</td><td>Hecho</td></tr>
+    <tr><td>Puerta de privacidad con estado STOP</td><td>Data Scientist</td><td>2026-10-22</td><td>Hecho</td></tr>
+    <tr><td>Bloque <code>trace</code> en cada recomendación</td><td>ML Engineer</td><td>2026-10-22</td><td>Hecho</td></tr>
+    <tr><td>Monitoreo mensual ejecutable</td><td>ML Engineer</td><td>2026-10-22</td><td>Hecho</td></tr>
+    <tr><td>Bloquear la publicación sin GO ni firma del Product Owner (CI)</td><td>ML Engineer</td><td>2026-11-05</td><td>Pendiente</td></tr>
+    <tr><td>Intervalos de confianza de las brechas en <code>deployment_decision.json</code></td><td>Data Scientist</td><td>2026-11-05</td><td>Pendiente</td></tr>
+    <tr><td>Elegir la mitigación (B2 o D), con revisión legal en el caso de D</td><td>Product Owner</td><td>2026-11-12</td><td>Pendiente</td></tr>
+    <tr><td>Repetir el simulacro con el procedimiento corregido</td><td>Product Owner</td><td>2026-11-19</td><td>Pendiente</td></tr>
+  </tbody>
+</table>
+<p class="caption">Fuente: <code>reports/lab13/INCIDENT_POSTMORTEM.md</code>.</p>
+
+<h2>5.- Obligación legal, marco voluntario y recomendación ética.</h2>
+<p>Los controles de gobernanza responden a tres fuentes de distinta fuerza. Como los datos son sintéticos, las obligaciones legales se analizan para un despliegue real en República Dominicana. Esta interpretación es académica y no constituye asesoría jurídica.</p>
+<table>
+  <thead><tr><th style="width:13%">Categoría</th><th style="width:25%">Fuente</th><th>Qué exige o propone</th><th>Control de LAB13 que lo atiende</th></tr></thead>
+  <tbody>
+    <tr><td class="b">Legal</td><td>Ley 172-13 de protección de datos personales</td><td>Finalidad, calidad y seguridad del tratamiento; derechos de acceso, rectificación, cancelación y oposición</td><td>Inventario y minimización; tabla de retención con acceso por rol; puerta de privacidad</td></tr>
+    <tr><td class="b">Legal</td><td>Constitución, arts. 44 y 70 (intimidad y hábeas data)</td><td>Acceso de cada persona a sus datos y a su rectificación</td><td>Logs conservados 24 meses para responder; la apelación interna no sustituye el hábeas data</td></tr>
+    <tr><td class="b">Legal</td><td>Constitución, art. 39 (igualdad)</td><td>Igual trato y no discriminación por parte de las instituciones</td><td>Puerta <code>group_recall</code> y monitoreo mensual por grupo</td></tr>
+    <tr><td class="b">Legal</td><td>Ley 200-04 de libre acceso a la información pública</td><td>Acceso a la información de las instituciones públicas</td><td>Model Card, Datasheet y runbook públicos y versionados</td></tr>
+    <tr><td class="b">Voluntario</td><td>NIST AI RMF 1.0</td><td>GOVERN, MAP, MEASURE y MANAGE</td><td>Mapa de 25 subcategorías: 13 verificadas y 12 documentadas (<code>nist_rmf_map.csv</code>)</td></tr>
+    <tr><td class="b">Voluntario</td><td>Model Cards (Mitchell et al.) y Datasheets (Gebru et al.)</td><td>Documentación estándar del modelo y de los datos</td><td><code>docs/MODEL_CARD.md</code>, <code>docs/DATASET_CARD.md</code></td></tr>
+    <tr><td class="b">Voluntario</td><td>Recomendación de la OCDE sobre IA</td><td>Rendición de cuentas y capacidad de anular o retirar el sistema</td><td>RACI con un único A; rollback a FIFO</td></tr>
+    <tr><td class="b">Ética</td><td>Decisión del equipo</td><td>La autoridad final es humana; REVIEW obliga a decidir y registrar</td><td>Traspaso 3 detenido; acción humana visible en el tablero</td></tr>
+    <tr><td class="b">Ética</td><td>Decisión del equipo</td><td>No concluir con grupos sin soporte</td><td>Estado LOW_SUPPORT en el monitoreo</td></tr>
+    <tr><td class="b">Ética</td><td>Decisión del equipo</td><td>Postmortem sin culpables y rollback a una alternativa que cumpla la política</td><td>Postmortem del simulacro; FIFO como alternativa segura</td></tr>
+  </tbody>
+</table>
+<p class="caption">Análisis completo en <code>docs/MARCO_NORMATIVO.md</code>. Los plazos de retención y los umbrales de 0.68 y 0.16 son decisiones del equipo, no exigencias legales.</p>
+
+<h2>6.- Pruebas, Git y calidad documental.</h2>
+<p>Las 20 pruebas automatizadas pasan. Cubren los contratos de datos, la privacidad, la equidad, la gobernanza, el monitoreo, el mapa NIST y el tablero de Streamlit sin navegador (AppTest).</p>
+<table>
+  <thead><tr><th style="width:32%">Prueba</th><th>Qué comprueba</th></tr></thead>
+  <tbody>
+    <tr><td><code>test_data</code>, <code>test_privacy</code></td><td>Que se rechace una columna prohibida o faltante antes de predecir</td></tr>
+    <tr><td><code>test_governance</code> (8)</td><td>Que una puerta fallida produzca REVIEW; que un recall bajo en un grupo produzca REVIEW aunque el global cumpla; que un grupo pequeño no dispare la puerta; que una falla de privacidad produzca STOP; que haya un solo A; que el RACI real sea válido; que la decisión real sea REVIEW con trazabilidad</td></tr>
+    <tr><td><code>test_monitoring</code> (2)</td><td>Que una caída mensual produzca ALERT y que un mes sin soporte se marque LOW_SUPPORT</td></tr>
+    <tr><td><code>test_app</code></td><td>Que la aplicación abra, advierta que los datos son sintéticos, muestre REVIEW, la trazabilidad y la acción humana</td></tr>
+    <tr><td><code>test_impact</code>, <code>test_model</code>, <code>test_fairness</code>, <code>test_nist_map</code></td><td>La prioridad de los riesgos, las predicciones binarias, las métricas por grupo y la trazabilidad del mapa NIST</td></tr>
+  </tbody>
+</table>
+<pre>uv sync --frozen
+uv run pytest -q
+uv run python scripts/lab13_governance.py
+uv run python scripts/lab13_monitor.py
+uv run python scripts/simulate_incident.py
+uv run streamlit run app.py
+uv export --format requirements-txt --no-dev -o requirements.txt
+python scripts/build_e08_pdf.py        # regenera este documento</pre>
+<p><b>Historial Git.</b> La rama <code>master</code> registra un commit por hito:</p>
+<ul>
+  <li>inicialización del proyecto;</li>
+  <li>evaluación de impacto de LAB11;</li>
+  <li>dos commits de la auditoría de LAB12;</li>
+  <li>la mitigación y el mapa NIST;</li>
+  <li>el marco normativo;</li>
+  <li>la síntesis del Ejercicio 07;</li>
+  <li>el cierre de LAB13, con la etiqueta <code>u04-lab13-master</code>.</li>
+</ul>
+<p>La rama <code>main</code> conserva una versión anterior del proyecto como archivo; no forma parte de esta entrega.</p>
+<p><b>Calidad documental.</b> Ningún documento conserva marcadores <code>REPLACE</code>. Cada cifra de este informe remite a un archivo generado por un script. La publicación queda preparada sin datos personales ni secretos, con <code>requirements.txt</code> listo para Streamlit Community Cloud. El despliegue en la nube es opcional y no se realizó.</p>
+
+<h2>7.- Declaración de uso de IA.</h2>
+<p>Se usó Claude (Anthropic, modelo Claude Opus 5.5) como asistente para la estructura, el código, las pruebas y la redacción. La IA no decidió los valores del análisis ni generó evidencia: todas las cifras provienen de scripts ejecutados y pueden reproducirse.</p>
+<table>
+  <thead><tr><th style="width:24%">Elemento</th><th>Detalle</th></tr></thead>
+  <tbody>
+    <tr><td class="b">Prompts relevantes</td><td>"Analizar" (con el manual de LAB13); "empieza LAB13 en master: compuerta de recall por grupo, RACI, Model Card, runbook, simulacro, app y pruebas, reutilizando lo útil de main"; "verificar si cumple con el mandato" (Ejercicio 08); "agrega el HANDOFF, el monitoreo mensual ejecutable y arma el PDF del E08 en formato UASD".</td></tr>
+    <tr><td class="b">Aportes de la IA</td><td>Puertas <code>group_recall</code> y <code>privacy</code>, estado STOP y bloque <code>trace</code>; el módulo y el script de monitoreo; el simulacro medido; los cambios al tablero; la redacción de la Model Card, la Datasheet, el runbook, el HANDOFF y el postmortem (sobre la estructura de la rama <code>main</code> del propio estudiante); las pruebas nuevas; y esta síntesis.</td></tr>
+    <tr><td class="b">Verificaciones humanas</td><td>Ejecuté <code>lab13_governance.py</code>, <code>lab13_monitor.py</code>, <code>simulate_incident.py</code> y <code>pytest</code> (20 de 20). Revisé que la recomendación REVIEW, el RACI, los traspasos y las acciones correctivas reflejen mi criterio, y contrasté las cifras con <code>reports/lab13/</code>.</td></tr>
+    <tr><td class="b">Errores detectados</td><td>El pipeline recomendaba GO porque solo revisaba el recall global. <code>simulate_incident.py</code> tenía <code>SyntaxError</code>. La recomendación no incluía versión, política ni evidencia. El monitoreo estaba descrito, pero no se ejecutaba. Y <code>age_band</code> figura como sensible, pero se usa como predictor.</td></tr>
+    <tr><td class="b">Correcciones</td><td>Se agregaron la puerta por grupo (que lleva la recomendación a REVIEW), la de privacidad, el bloque <code>trace</code>, el simulacro medido y el monitoreo mensual con su prueba. El uso de <code>age_band</code> queda documentado como decisión pendiente del Product Owner; la IA no lo resolvió.</td></tr>
+  </tbody>
+</table>
+<p class="caption">Declaración completa: <code>docs/AI_USE_DECLARATION.md</code>.</p>
+
+<section style="break-before: page">
+<p class="center"><b>Referencias.</b></p>
+<p>Gebru, T., Morgenstern, J., Vecchione, B., Vaughan, J. W., Wallach, H., Daumé III, H., &amp; Crawford, K. (2021). Datasheets for datasets. Communications of the ACM, 64(12), 86–92. <a href="https://doi.org/10.1145/3458723">https://doi.org/10.1145/3458723</a></p>
+<p>Mitchell, M., Wu, S., Zaldivar, A., Barnes, P., Vasserman, L., Hutchinson, B., Spitzer, E., Raji, I. D., &amp; Gebru, T. (2019). Model cards for model reporting. Proceedings of the Conference on Fairness, Accountability, and Transparency (FAT* '19), 220–229. <a href="https://doi.org/10.1145/3287560.3287596">https://doi.org/10.1145/3287560.3287596</a></p>
+<p>National Institute of Standards and Technology. (2023). Artificial Intelligence Risk Management Framework (AI RMF 1.0) (NIST AI 100-1). <a href="https://doi.org/10.6028/NIST.AI.100-1">https://doi.org/10.6028/NIST.AI.100-1</a></p>
+<p>Nolasco, E. R. J. (s. f.). INF-8239 Ciencia de Datos II, Unidad 04: Manual de laboratorios (U04.LAB13) y Ejercicio 08. Universidad Autónoma de Santo Domingo.</p>
+<p>OECD. (2019, revisada en 2023 y 2024). Recommendation of the Council on Artificial Intelligence (OECD/LEGAL/0449). <a href="https://doi.org/10.1787/cc2e1d3e-en">https://doi.org/10.1787/cc2e1d3e-en</a></p>
+<p>República Dominicana. (2004). Ley General de Libre Acceso a la Información Pública núm. 200-04.</p>
+<p>República Dominicana. (2013). Ley núm. 172-13 sobre protección integral de los datos personales. Gaceta Oficial núm. 10737, 15 de diciembre de 2013.</p>
+<p>República Dominicana. (2015). Constitución de la República Dominicana, arts. 39, 44 y 70. <a href="https://republica-dominicana.justia.com/nacionales/constitucion-de-la-republica-dominicana/titulo-ii">https://republica-dominicana.justia.com/</a></p>
+<p>Streamlit. (s. f.). App testing (st.testing.v1.AppTest) [Documentación oficial]. <a href="https://docs.streamlit.io/develop/api-reference/app-testing">https://docs.streamlit.io/develop/api-reference/app-testing</a></p>
+<p>Weerts, H., Dudík, M., Edgar, R., Jalali, A., Lutz, R., &amp; Madaio, M. (2023). Fairlearn: Assessing and improving fairness of AI systems. Journal of Machine Learning Research, 24(257), 1–8. <a href="https://jmlr.org/papers/v24/23-0389.html">https://jmlr.org/papers/v24/23-0389.html</a></p>
+</section>
+
+</body>
+</html>

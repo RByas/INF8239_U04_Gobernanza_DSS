@@ -1,0 +1,59 @@
+{
+  "trace": {
+    "package_version": "0.1.0",
+    "git_commit": "224a1d7",
+    "model": "logistic",
+    "policy": "configs/governance.yml",
+    "policy_sha256": "67b502bf3bf5",
+    "evidence": [
+      "reports/lab11/DECISION_RECORD.md",
+      "reports/lab12/AUDIT_REPORT.md",
+      "reports/lab12/logistic/bootstrap_ci.csv",
+      "reports/lab12/mitigation/threshold_strategies.csv",
+      "student_inputs/raci.csv"
+    ],
+    "generated_at": "2026-10-22T16:53:38+00:00"
+  },
+  "metrics": {
+    "accuracy": 0.71875,
+    "recall": 0.717391304347826,
+    "group_recall": {
+      "G1": {
+        "recall": 0.6530612244897959,
+        "n": 101
+      },
+      "G2": {
+        "recall": 0.7906976744186046,
+        "n": 59
+      }
+    }
+  },
+  "gaps": {
+    "recall_gap": 0.13763644992880875,
+    "fpr_gap": 0.125
+  },
+  "resources": {
+    "training_seconds": 0.06843570002820343,
+    "model_kb": 3.5634765625,
+    "latency_ms": 0.05969437479507178
+  },
+  "privacy": {
+    "forbidden_in_features": []
+  },
+  "decision": {
+    "status": "REVIEW",
+    "checks": {
+      "recall": true,
+      "recall_gap": true,
+      "fpr_gap": true,
+      "latency": true,
+      "model_size": true,
+      "group_recall": false,
+      "privacy": true
+    },
+    "failed": [
+      "group_recall"
+    ],
+    "human_action": "Do not deploy: the accountable owner analyses the failed gates and records a decision (limit, modify or stop)"
+  }
+}
